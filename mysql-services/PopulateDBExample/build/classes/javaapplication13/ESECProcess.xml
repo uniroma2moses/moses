@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<graph>
+    <node id='1'>
+        <link to='2' probability='1.0'/>
+    </node>
+    <node id='2' type='while'>
+        <link to='3' probability='1'/>
+    </node>
+    <node id='3' type='fork'>
+        <link to='4' probability='1.0'/>
+        <link to='5' probability='1.0'/>
+    </node>
+    <node id='4' type='invoke' serviceName='S1' operationName='s1op'>
+        <link to='6' probability='1.0'/>
+    </node>
+    <node id='5' type='invoke' serviceName='S3' operationName='s3op'>
+        <link to='7' probability='1.0'/>
+    </node>
+    <node id='6' type='invoke' serviceName='S2' operationName='s2op'>
+        <link to='7' probability='1.0'/>
+    </node>
+    <node id='7' type='join'>
+        <link to='8' probability='1.0'/>
+    </node>
+    <node id='8' type='endWhile'>
+        <link to='2' probability='-1/3'/>
+        <link to='9' probability='2/3'/>
+    </node>
+    <node id='9' type='invoke' serviceName='S4' operationName='s4op'>
+        <link to='10' probability='1.0'/>
+    </node>
+    <node id='10' type='other'>
+        <link to='11' probability='0.7'/>
+        <link to='12' probability='0.3'/>
+    </node>
+    <node id='11' type='invoke' serviceName='S5' operationName='s5op'>
+        <link to='13' probability='1.0'/>
+    </node>
+    <node id='12' type='invoke' serviceName='S6' operationName='s6op'>
+        <link to='13' probability='1.0'/>
+    </node>
+    <node id='13' type='other'>
+        <link to='14' probability='1.0'/>
+    </node>
+    <node id='14'/>
+    <root id='1'/>
+    <sink id='14'/>
+</graph>
