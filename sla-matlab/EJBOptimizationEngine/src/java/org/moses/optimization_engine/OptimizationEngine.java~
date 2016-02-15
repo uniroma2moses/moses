@@ -1,0 +1,183 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+
+package org.moses.optimization_engine;
+
+import javax.jws.WebMethod;
+import javax.jws.WebParam;
+import javax.jws.WebService;
+import javax.ejb.Stateless;
+import java.io.File;
+import java.io.RandomAccessFile;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
+import java.util.Iterator;
+import java.util.Vector;
+import org.moses.entity.SLA;
+import org.moses.mdal.Constraints.ProcessSLAConstraint;
+import org.moses.mdal.MDAL;
+import org.moses.mdal.PerceivedQoSMDALInterface;
+import org.moses.mdal.SLAsMDALInterface;
+import org.moses.mdal.monitor.ViolationResult;
+import org.moses.optimization_engine.utils.NumericComputationTool;
+
+/**
+ *
+ * @author dante
+ */
+@WebService()
+@Stateless()
+public class OptimizationEngine {
+
+    private static final String lockFileName = "OElock";
+    private static final String CONFIG_FILE = "optimization.properties";
+    /**
+     * Web service operation
+     */
+    @WebMethod(operationName = "calculateProcessSolutionForSLACreation")
+    public Boolean calculateProcessSolutionForSLACreation(@WebParam(name = "processName")
+    String processName, @WebParam(name = "processClass")
+    String processClass) throws Exception {
+        System.out.println("calculateProcessSolutionForSLACreation");
+        return calculateProcessSolution(processName, processClass, NumericComputationTool.ChangeType.SLA_CREATION);
+    }
+
+    @WebMethod(operationName = "calculateProcessSolutionForSLADeletion")
+    public Boolean calculateProcessSolutionForSLADeletion(@WebParam(name = "processName")
+    String processName, @WebParam(name = "processClass")
+    String processClass) throws Exception {
+        System.out.println("calculateProcessSolutionForSLADeletion");
+        return calculateProcessSolution(processName, processClass, NumericComputationTool.ChangeType.SLA_DELETION);
+    }
+
+    @WebMethod(operationName = "calculateProcessSolutionForServiceChange")
+    public Boolean calculateProcessSolutionForServiceChange(@WebParam(name = "processName")
+    String processName) throws Exception {
+        System.out.println("calculateProcessSolutionForServiceChange");
+        return calculateProcessSolution(processName, null, NumericComputationTool.ChangeType.SERVICE_CHANGE);
+    }
+    
+    
+    /*private Boolean calculateProcessSolutionForQoSChange(@WebParam(name = "processName")
+    String processName) throws Exception {
+        System.out.println("calculateProcessSolutionForQoSChange");
+        return calculateProcessSolution(processName, null, NumericComputationTool.ChangeType.QOS_CHANGE);
+    }*/
+
+    @WebMethod(operationName = "calculateProcessSolutionForQoSChange")
+    public Boolean calculateProcessSolutionForQoSChange(@WebParam(name = "processName")
+    String processName) throws Exception {
+        System.out.println("calculateProcessSolutionForQoSChange");
+        MDAL mdal = MDAL.getInstance();
+        Boolean resp = true;
+        PerceivedQoSMDALInterface mdalQoS = mdal.getPerceivedQoSMDAL();
+        Vector<ViolationResult> viol = mdalQoS.getViolations();
+        if(viol!=null && !viol.isEmpty()){
+            Iterator violIt = viol.iterator();
+            Vector<String> checked = new Vector<String>();
+            while(violIt.hasNext() && resp){
+                //System.out.println("OptEngine: ciclo processi");
+                ViolationResult elem = (ViolationResult) violIt.next();
+                String elemProcessName = elem.getProcessName();
+                if((elemProcessName != null) && !checked.contains(elemProcessName)){
+                    resp = calculateProcessSolution(elemProcessName, null, NumericComputationTool.ChangeType.QOS_CHANGE);
+                    checked.add(elemProcessName);
+                }
+            }
+        }
+        else {
+            if((processName != null) && (!processName.equals("")))
+                resp = calculateProcessSolution(processName, null, NumericComputationTool.ChangeType.QOS_CHANGE);
+        }
+        //System.out.println("OptEngine: fine ciclo processi");
+        return resp;
+        
+        
+    }
+
+    @WebMethod(operationName = "calculateProcessSolutionForProcessCreation")
+    public Boolean calculateProcessSolutionForProcessCreation(@WebParam(name = "processName")
+    String processName) throws Exception {
+        System.out.println("calculateProcessSolutionForProcessCreation");
+        return calculateProcessSolution(processName, null, NumericComputationTool.ChangeType.PROCESS_CREATION);
+    }
+
+    private Boolean calculateProcessSolution(String processName, String processClass, NumericComputationTool.ChangeType type) throws Exception {
+        boolean result = false;
+        try {
+            File lockFile = File.createTempFile(lockFileName, null);
+            FileChannel fileChannel = new RandomAccessFile(lockFile, "rw").getChannel();
+
+            FileLock lock = fileChannel.lock();
+
+            NumericComputationTool nct = NumericComputationTool.getInstance();
+            nct.printInput(processName, processClass, type);
+            result = nct.invoke(processName);
+            if (result) {
+                if (type.equals(NumericComputationTool.ChangeType.SLA_CREATION) || type.equals(NumericComputationTool.ChangeType.SLA_DELETION)) {
+                    //Update the TotalRequestRate
+                    MDAL mdal = MDAL.getInstance();
+                    SLAsMDALInterface slasMDAL = mdal.getSLAsMDAL();
+                    SLA sla = slasMDAL.readSLA(processName, processClass);
+                    Integer requestRate = Integer.valueOf(sla.getSlaConstraints().get(ProcessSLAConstraint.REQUEST_RATE));
+                    Integer totalRequestRate = Integer.valueOf(sla.getSlaConstraints().get(ProcessSLAConstraint.TOTAL_REQUEST_RATE));
+                    if (type.equals(NumericComputationTool.ChangeType.SLA_CREATION)) {
+                        totalRequestRate += requestRate;
+                    } else {
+                        totalRequestRate -= requestRate;
+                    }
+                    sla.getSlaConstraints().put(ProcessSLAConstraint.TOTAL_REQUEST_RATE, totalRequestRate.toString());
+                    slasMDAL.updateSLA(sla);
+                }
+
+                nct.parseAndSaveOutput(processName);
+            }
+
+            lock.release();
+            fileChannel.close();
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            throw new Exception(ex.getClass().getName() + ":" + ex.getMessage());
+        }
+
+        return result;
+        //return true;
+
+    }
+
+    /**
+     * Check if there exists a new solution for a process with a given process name when there is a SLA creation for a QoS class
+     * @param processName
+     * @param processClass
+     * @return "true" if there exists a solution; "false" otherwise
+     * @throws org.apache.axis2.AxisFault
+     */
+    @WebMethod(operationName = "existProcessSolution")
+    public Boolean existProcessSolution(@WebParam(name = "processName")
+    String processName, @WebParam(name = "processClass")
+    String processClass) throws Exception {
+        boolean result = false;
+        System.out.println("existProcessSolution");
+        /*try {
+            File lockFile = File.createTempFile(lockFileName, null);
+            FileChannel fileChannel = new RandomAccessFile(lockFile, "rw").getChannel();
+
+            FileLock lock = fileChannel.lock();
+
+            NumericComputationTool nct = NumericComputationTool.getInstance();
+            nct.printInput(processName, processClass, NumericComputationTool.ChangeType.SLA_CREATION);
+            result = nct.invoke(processName);
+
+            lock.release();
+            fileChannel.close();
+        } catch (Exception ex) {
+            throw new Exception(ex.getClass().getName() + ":" + ex.getMessage());
+        }
+
+        return result;*/
+        return true;
+    }
+
+}

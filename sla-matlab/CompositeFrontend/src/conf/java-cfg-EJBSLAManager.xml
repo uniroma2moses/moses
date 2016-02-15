@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<javaee-project xmlns="http://java.sun.com/xml/ns/jbi/javaee/config/1/" xmlns:ns0="http://sla_manager.moses.org/" xmlns:ns1="http://optimization_engine.moses.org/" name="EJBSLAManager">
+    <services>
+        <provides enable-for-javaee-http="true" endpoint-name="javaee_SLAManagerPort" interface-name="ns0:SLAManager" service-name="ns0:SLAManagerService"/>
+        <consumes enable-for-nmr="true" endpoint-name="javaee_OptimizationEnginePort" interface-name="ns1:OptimizationEngine" service-name="ns1:OptimizationEngineService"/>
+    </services>
+</javaee-project>

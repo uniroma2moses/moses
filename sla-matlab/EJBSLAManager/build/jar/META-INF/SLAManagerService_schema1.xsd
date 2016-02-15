@@ -1,0 +1,323 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://sla_manager.moses.org/" xmlns:tns="http://sla_manager.moses.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="MDALException" type="tns:MDALException"/>
+
+  <xs:element name="checkAgreemnt" type="tns:checkAgreemnt"/>
+
+  <xs:element name="checkAgreemntResponse" type="tns:checkAgreemntResponse"/>
+
+  <xs:element name="createSlaAgreement" type="tns:createSlaAgreement"/>
+
+  <xs:element name="createSlaAgreementResponse" type="tns:createSlaAgreementResponse"/>
+
+  <xs:element name="createUser" type="tns:createUser"/>
+
+  <xs:element name="createUserResponse" type="tns:createUserResponse"/>
+
+  <xs:element name="deleteAgreement" type="tns:deleteAgreement"/>
+
+  <xs:element name="deleteAgreementResponse" type="tns:deleteAgreementResponse"/>
+
+  <xs:element name="getAvailableProcessClasses" type="tns:getAvailableProcessClasses"/>
+
+  <xs:element name="getAvailableProcessClassesResponse" type="tns:getAvailableProcessClassesResponse"/>
+
+  <xs:complexType name="createUser">
+    <xs:sequence>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="surname" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createUserResponse">
+    <xs:sequence>
+      <xs:element name="return" type="tns:user" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="user">
+    <xs:sequence>
+      <xs:element name="agreements" type="tns:agreement" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+      <xs:element name="surname" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="agreement">
+    <xs:sequence>
+      <xs:element name="arrivalRate" type="xs:double" minOccurs="0"/>
+      <xs:element name="expireDate" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="sla" type="tns:sla" minOccurs="0"/>
+      <xs:element name="slaConstraints">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="key" minOccurs="0" type="tns:clientSLAConstraint"/>
+                  <xs:element name="value" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="slaMonitor">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="key" minOccurs="0" type="tns:clientSLAMonitor"/>
+                  <xs:element name="value" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="sla">
+    <xs:sequence>
+      <xs:element name="process" type="tns:process" minOccurs="0"/>
+      <xs:element name="processClass" type="xs:string" minOccurs="0"/>
+      <xs:element name="slaConstraints">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="key" minOccurs="0" type="tns:processSLAConstraint"/>
+                  <xs:element name="value" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="slaFile" type="xs:string" minOccurs="0"/>
+      <xs:element name="slaMonitor">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="key" minOccurs="0" type="tns:processSLAMonitor"/>
+                  <xs:element name="value" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="process">
+    <xs:sequence>
+      <xs:element name="processEndpoints" type="xs:string" minOccurs="0"/>
+      <xs:element name="processGraph" type="xs:string" minOccurs="0"/>
+      <xs:element name="processNS" type="xs:string" minOccurs="0"/>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+      <xs:element name="processOperation" type="xs:string" minOccurs="0"/>
+      <xs:element name="services" type="tns:abstractService" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="slas" type="tns:sla" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="stateful" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="abstractService">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="nameSpace" type="xs:string" minOccurs="0"/>
+      <xs:element name="operations" type="tns:abstractOperation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="processes" type="tns:process" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="services" type="tns:concreteService" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="abstractOperation">
+    <xs:sequence>
+      <xs:element name="name" type="xs:string" minOccurs="0"/>
+      <xs:element name="operations" type="tns:concreteOperation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="service" type="tns:abstractService" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="concreteOperation">
+    <xs:sequence>
+      <xs:element name="isWorking" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="operation" type="tns:abstractOperation" minOccurs="0"/>
+      <xs:element name="service" type="tns:concreteService" minOccurs="0"/>
+      <xs:element name="slaConstraints">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="key" minOccurs="0" type="tns:operationSLAConstraint"/>
+                  <xs:element name="value" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="slaFile" type="xs:string" minOccurs="0"/>
+      <xs:element name="slaMonitor">
+        <xs:complexType>
+          <xs:sequence>
+            <xs:element name="entry" minOccurs="0" maxOccurs="unbounded">
+              <xs:complexType>
+                <xs:sequence>
+                  <xs:element name="key" minOccurs="0" type="tns:operationSLAMonitor"/>
+                  <xs:element name="value" minOccurs="0" type="xs:string"/>
+                </xs:sequence>
+              </xs:complexType>
+            </xs:element>
+          </xs:sequence>
+        </xs:complexType>
+      </xs:element>
+      <xs:element name="stateful" type="xs:boolean"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="concreteService">
+    <xs:sequence>
+      <xs:element name="endpointURL" type="xs:string" minOccurs="0"/>
+      <xs:element name="expireDate" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="id" type="xs:int" minOccurs="0"/>
+      <xs:element name="operations" type="tns:concreteOperation" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="service" type="tns:abstractService" minOccurs="0"/>
+      <xs:element name="wsdlURL" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="MDALException">
+    <xs:sequence>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteAgreement">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+      <xs:element name="processClass" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="deleteAgreementResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="checkAgreemnt">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+      <xs:element name="processClass" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="checkAgreemntResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createSlaAgreement">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+      <xs:element name="processClass" type="xs:string" minOccurs="0"/>
+      <xs:element name="username" type="xs:string" minOccurs="0"/>
+      <xs:element name="password" type="xs:string" minOccurs="0"/>
+      <xs:element name="expireDate" type="xs:dateTime" minOccurs="0"/>
+      <xs:element name="arrivalRate" type="xs:double" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="createSlaAgreementResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getAvailableProcessClasses">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="getAvailableProcessClassesResponse">
+    <xs:sequence>
+      <xs:element name="return" type="tns:sla" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="operationSLAConstraint">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RELIABILITY"/>
+      <xs:enumeration value="RESPONSE_TIME"/>
+      <xs:enumeration value="COST"/>
+      <xs:enumeration value="REQUEST_RATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="operationSLAMonitor">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AVG_RELIABILITY"/>
+      <xs:enumeration value="AVG_RESPONSE_TIME"/>
+      <xs:enumeration value="AVG_COST"/>
+      <xs:enumeration value="AVG_REQUEST_RATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="processSLAConstraint">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RELIABILITY"/>
+      <xs:enumeration value="RESPONSE_TIME"/>
+      <xs:enumeration value="COST"/>
+      <xs:enumeration value="REQUEST_RATE"/>
+      <xs:enumeration value="TOTAL_REQUEST_RATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="processSLAMonitor">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AVG_RELIABILITY"/>
+      <xs:enumeration value="AVG_RESPONSE_TIME"/>
+      <xs:enumeration value="AVG_COST"/>
+      <xs:enumeration value="AVG_REQUEST_RATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="clientSLAConstraint">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="RELIABILITY"/>
+      <xs:enumeration value="RESPONSE_TIME"/>
+      <xs:enumeration value="COST"/>
+      <xs:enumeration value="REQUEST_RATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="clientSLAMonitor">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="AVG_RELIABILITY"/>
+      <xs:enumeration value="AVG_RESPONSE_TIME"/>
+      <xs:enumeration value="AVG_COST"/>
+      <xs:enumeration value="AVG_REQUEST_RATE"/>
+    </xs:restriction>
+  </xs:simpleType>
+</xs:schema>
+

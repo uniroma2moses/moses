@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns1="http://sla_manager.moses.org/" version="1.0">
+    <services binding-component="true">
+        <consumes endpoint-name="SLAManagerPort" interface-name="ns1:SLAManager" service-name="ns1:SLAManagerService"/>
+    </services>
+</jbi>

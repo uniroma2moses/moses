@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<xs:schema version="1.0" targetNamespace="http://optimization_engine.moses.org/" xmlns:tns="http://optimization_engine.moses.org/" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <xs:element name="Exception" type="tns:Exception"/>
+
+  <xs:element name="calculateProcessSolutionForProcessCreation" type="tns:calculateProcessSolutionForProcessCreation"/>
+
+  <xs:element name="calculateProcessSolutionForProcessCreationResponse" type="tns:calculateProcessSolutionForProcessCreationResponse"/>
+
+  <xs:element name="calculateProcessSolutionForQoSChange" type="tns:calculateProcessSolutionForQoSChange"/>
+
+  <xs:element name="calculateProcessSolutionForQoSChangeResponse" type="tns:calculateProcessSolutionForQoSChangeResponse"/>
+
+  <xs:element name="calculateProcessSolutionForSLACreation" type="tns:calculateProcessSolutionForSLACreation"/>
+
+  <xs:element name="calculateProcessSolutionForSLACreationResponse" type="tns:calculateProcessSolutionForSLACreationResponse"/>
+
+  <xs:element name="calculateProcessSolutionForSLADeletion" type="tns:calculateProcessSolutionForSLADeletion"/>
+
+  <xs:element name="calculateProcessSolutionForSLADeletionResponse" type="tns:calculateProcessSolutionForSLADeletionResponse"/>
+
+  <xs:element name="calculateProcessSolutionForServiceChange" type="tns:calculateProcessSolutionForServiceChange"/>
+
+  <xs:element name="calculateProcessSolutionForServiceChangeResponse" type="tns:calculateProcessSolutionForServiceChangeResponse"/>
+
+  <xs:element name="existProcessSolution" type="tns:existProcessSolution"/>
+
+  <xs:element name="existProcessSolutionResponse" type="tns:existProcessSolutionResponse"/>
+
+  <xs:complexType name="calculateProcessSolutionForQoSChange">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForQoSChangeResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="Exception">
+    <xs:sequence>
+      <xs:element name="message" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForProcessCreation">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForProcessCreationResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="existProcessSolution">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+      <xs:element name="processClass" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="existProcessSolutionResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForSLADeletion">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+      <xs:element name="processClass" type="xs:string" minOccurs="0"/>
+      <xs:element name="rate" type="xs:double" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForSLADeletionResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForSLACreation">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+      <xs:element name="processClass" type="xs:string" minOccurs="0"/>
+      <xs:element name="rate" type="xs:double" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForSLACreationResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForServiceChange">
+    <xs:sequence>
+      <xs:element name="processName" type="xs:string" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="calculateProcessSolutionForServiceChangeResponse">
+    <xs:sequence>
+      <xs:element name="return" type="xs:boolean" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>
+

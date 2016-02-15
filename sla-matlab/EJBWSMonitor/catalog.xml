@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="file:/Users/dante/NetBeansProjects/EJBOptimizationEngine/src/java/META-INF/OptimizationEngineService.wsdl" uri="src/conf/xml-resources/web-service-references/OptimizationEngineService/wsdl/OptimizationEngineService.wsdl"/>
+    <system systemId="file:/Users/dante/NetBeansProjects/EJBOptimizationEngine/src/java/META-INF/OptimizationEngineService_schema1.xsd" uri="src/conf/xml-resources/web-service-references/OptimizationEngineService/wsdl/OptimizationEngineService_schema1.xsd"/>
+    <system systemId="file:/Users/dante/Desktop/OptimizationEngineService.wsdl" uri="src/conf/xml-resources/web-service-references/OptimizationEngineService_1/wsdl/OptimizationEngineService.wsdl"/>
+    <system systemId="file:/Users/dante/Desktop/OptimizationEngineService_schema1.xsd" uri="src/conf/xml-resources/web-service-references/OptimizationEngineService_1/wsdl/OptimizationEngineService_schema1.xsd"/>
+    <system systemId="file:/root/ProgettiMoses2/backend/EJBWSMonitor/src/conf/wsdl/10.0.0.248_8080/OptimizationEngineService/OptimizationEngine.wsdl" uri="src/conf/xml-resources/web-service-references/OptimizationEngine/wsdl/OptimizationEngine.wsdl"/>
+    <system systemId="http://10.0.0.248:8080/OptimizationEngineService/OptimizationEngine?wsdl" uri="src/java/10.0.0.248_8080/OptimizationEngineService/OptimizationEngine.wsdl"/>
+    <system systemId="http://10.0.0.248:8080/OptimizationEngineService/OptimizationEngine?xsd=1" uri="src/conf/xml-resources/web-service-references/OptimizationEngine/wsdl/10.0.0.248_8080/OptimizationEngineService/OptimizationEngine.xsd_1.xsd"/>
+    <system systemId="file:/root/ProgettiMoses2/backend/EJBWSMonitor/src/java/10.0.0.248_8080/OptimizationEngineService/OptimizationEngine.wsdl" uri="src/conf/xml-resources/web-service-references/OptimizationEngine/wsdl/OptimizationEngine.wsdl"/>
+    <system systemId="file:/root/ProgettiMoses2/backend/EJBWSMonitor/src/java/10.0.0.248_8080/OptimizationEngineService/OptimizationEngine.xsd_1.xsd" uri="src/conf/xml-resources/web-service-references/OptimizationEngine/wsdl/OptimizationEngine.xsd_1.xsd"/>
+</catalog>
+
+
+
+
+
+
+
+

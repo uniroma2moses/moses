@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<jbi xmlns="http://java.sun.com/xml/ns/jbi" xmlns:ns1="http://sla_manager.moses.org/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="1.0" xsi:schemaLocation="http://java.sun.com/xml/ns/jbi ./jbi.xsd">
+    <service-assembly>
+        <identification>
+            <name>CompositeFrontend</name>
+            <description>Represents the Service Assembly of CompositeFrontend</description>
+        </identification>
+        <service-unit>
+            <identification>
+                <name>CompositeFrontend-EJBOptimizationEngine</name>
+                <description>Represents this Service Unit</description>
+            </identification>
+            <target>
+                <artifacts-zip>EJBOptimizationEngine.jar</artifacts-zip>
+                <component-name>sun-javaee-engine</component-name>
+            </target>
+        </service-unit>
+        <service-unit>
+            <identification>
+                <name>CompositeFrontend-EJBSLAManager</name>
+                <description>Represents this Service Unit</description>
+            </identification>
+            <target>
+                <artifacts-zip>EJBSLAManager.jar</artifacts-zip>
+                <component-name>sun-javaee-engine</component-name>
+            </target>
+        </service-unit>
+        <service-unit>
+            <identification>
+                <name>CompositeFrontend-sun-http-binding</name>
+                <description>Represents this Service Unit</description>
+            </identification>
+            <target>
+                <artifacts-zip>sun-http-binding.jar</artifacts-zip>
+                <component-name>sun-http-binding</component-name>
+            </target>
+        </service-unit>
+        <connections>
+            <connection>
+                <consumer endpoint-name="SLAManagerPort" service-name="ns1:SLAManagerService"/>
+                <provider endpoint-name="javaee_SLAManagerPort" service-name="ns1:SLAManagerService"/>
+            </connection>
+        </connections>
+    </service-assembly>
+</jbi>

@@ -1,0 +1,685 @@
+/*
+ * To change this template, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package org.moses.optimization_engine.utils;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
+import java.util.Vector;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.moses.entity.AbstractService;
+import org.moses.entity.ConcreteOperation;
+import org.moses.entity.ConcreteService;
+import org.moses.entity.SLA;
+import org.moses.entity.Process;
+import org.moses.entity.solution.EndpointNode;
+import org.moses.entity.solution.GroupNode;
+import org.moses.entity.solution.OperationNode;
+import org.moses.entity.solution.ServiceNode;
+import org.moses.exception.BadArgumentsMDALException;
+import org.moses.exception.MDALException;
+import org.moses.exception.NoSuchAbstractServiceMDALException;
+import org.moses.exception.NoSuchProcessMDALException;
+import org.moses.mdal.AbstractServicesMDALInterface;
+import org.moses.mdal.ConcreteOperationsMDALInterface;
+import org.moses.mdal.ConcreteServicesMDALInterface;
+import org.moses.mdal.Constraints.OperationSLAConstraint;
+import org.moses.mdal.Constraints.ProcessSLAConstraint;
+import org.moses.mdal.MDAL;
+import org.moses.mdal.PerceivedQoSMDALInterface;
+import org.moses.mdal.ProcessesMDALInterface;
+import org.moses.mdal.SLAsMDALInterface;
+import org.moses.mdal.SolutionsMDALInterface;
+import org.moses.mdal.monitor.ViolationResult;
+
+/**
+ *
+ * @author dante
+ */
+public class MatlabTool extends NumericComputationTool {
+
+    //Abstract mapping attributes
+    private static final Integer SERVICE_NAME_POSITION = 0;
+    private static final Integer OPERATION_NAME_POSITION = 1;
+    //Properties file attributes
+    private static final String MATLAB_WORKING_DIRECTORY = "matlabWorkingDirectory";
+    private static final String MATLAB_INPUT_FILE_NAME = "matlabInputFileName";
+    private static final String MATLAB_OUTPUT_GROUP_J_FILE_NAME = "matlabOutputGroupJFileName";
+    private static final String MATLAB_OUTPUT_SOLUTION_FILE_NAME = "matlabOutputSolutionFileName";
+    private static final String MATLAB_EXEC_PATH = "matlabExecPath";
+    private static final String MATLAB_OPTIONS = "matlabOptions";
+    private static final String MATLAB_COMMAND = "matlabCommand";
+    private static final String MATLAB_NOT_FOUND_SOLUTION_MESSAGE = "matlabNotFoundSolutionMessage";
+    //Output file attributes
+    private static final Integer GROUP_COLUMN_INDEX = 1;
+    private static final Integer ABSTRACT_OPERATION_COLUMN_INDEX = 2;
+    private static final Integer CONCRETE_OPERATION_COLUMN_START_INDEX = 3;
+    private static final Integer CLASS_COLUMN_START_INDEX = 2;
+    //Config file
+    private static final String CONFIG_FILE = "optimization.properties";
+    //Graph nodes attributes
+    private static final String GRAPH_NODE = "node";
+    private static final String GRAPH_ROOT = "root";
+    private static final String GRAPH_SINK = "sink";
+    private static final String GRAPH_ID = "id";
+    private static final String GRAPH_TO = "to";
+    private static final String GRAPH_PROBABILITY = "probability";
+    private static final String GRAPH_NODE_TYPE = "type";
+    private static final String GRAPH_NODE_SERVICE_NAME = "serviceName";
+    private static final String GRAPH_NODE_OPERATION_NAME = "operationName";
+    //Graph nodes values for attribute type
+    private static final String GRAPH_NODE_TYPE_INVOKE = "invoke";
+    private static final String GRAPH_NODE_TYPE_FORK = "fork";
+    private static final String GRAPH_NODE_TYPE_JOIN = "join";
+    private static final String GRAPH_NODE_TYPE_WHILE = "while";
+    private static final String GRAPH_NODE_TYPE_ENDWHILE = "endWhile";
+    private static final String GRAPH_NODE_TYPE_OTHER = "other";
+    //Reputation values
+    private static final String SERVICE_REPUTATION = "1";
+    private static final String PROCESS_REPUTATION = "1";
+    private Properties properties;
+    private Hashtable<Integer, ArrayList<String>> abstractMapping;
+    private ArrayList<String> processClasses;
+    private Hashtable<String, Integer> nodeTypeMapping = null;
+    private Hashtable<Integer, ConcreteOperationKey> concreteOperationIDMapping = null;
+
+    public MatlabTool() throws IOException {
+        this.abstractMapping = new Hashtable<Integer, ArrayList<String>>();
+        this.processClasses = new ArrayList<String>();
+
+        FileInputStream fis = new FileInputStream(CONFIG_FILE);
+        properties = new Properties();
+        properties.load(fis);
+        fis.close();
+
+        nodeTypeMapping = new Hashtable<String, Integer>();
+        nodeTypeMapping.put(GRAPH_NODE_TYPE_INVOKE, 0);
+        nodeTypeMapping.put(GRAPH_NODE_TYPE_FORK, 1);
+        nodeTypeMapping.put(GRAPH_NODE_TYPE_JOIN, -1);
+        nodeTypeMapping.put(GRAPH_NODE_TYPE_WHILE, 3);
+        nodeTypeMapping.put(GRAPH_NODE_TYPE_ENDWHILE, -3);
+        nodeTypeMapping.put(GRAPH_NODE_TYPE_OTHER, 2);
+
+        this.concreteOperationIDMapping = new Hashtable<Integer, ConcreteOperationKey>();
+    }
+
+    private ViolationResult get(Vector<ViolationResult> violations, int serviceName, String operationName){
+        Iterator violIt = violations.iterator();
+        while(violIt.hasNext()){
+            ViolationResult elem = (ViolationResult) violIt.next();
+            if((elem.getOperationName().equals(operationName)) && (elem.getServiceName().equals("" + serviceName)))
+                return elem;
+        }
+        return null;
+    }
+
+    @Override
+    public void printInput(String processName, String processClass, ChangeType type) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchProcessMDALException, MDALException, JDOMException {
+
+        String matlabInput = null;
+        MDAL mdal = MDAL.getInstance();
+        SLAsMDALInterface smi = mdal.getSLAsMDAL();
+        AbstractServicesMDALInterface asmi = mdal.getAbstractServicesMDAL();
+        ProcessesMDALInterface pmi = mdal.getProcessesMDAL();
+        Process p = pmi.readProcess(processName);
+
+        List<SLA> slas = p.getSlas();
+
+        //Enabling alternate
+        matlabInput = "enable_retry=1;\n";
+        //Setting class number
+        matlabInput = matlabInput + "K=" + slas.size() + ";\n";
+        //Setting gamma (client arrival rate per-class)
+        matlabInput += "gamma=[ ";
+
+        Iterator<SLA> slasIter = slas.iterator();
+        while (slasIter.hasNext()) {
+            SLA sla = slasIter.next();
+
+            Integer requestRate = Integer.valueOf(sla.getSlaConstraints().get(ProcessSLAConstraint.REQUEST_RATE));
+            Integer totalRequestRate = Integer.valueOf(sla.getSlaConstraints().get(ProcessSLAConstraint.TOTAL_REQUEST_RATE));
+            if (type.equals(ChangeType.SLA_CREATION) && sla.getProcessClass().equals(processClass)) {
+                totalRequestRate += requestRate;
+            } else if (type.equals(ChangeType.SLA_DELETION) && sla.getProcessClass().equals(processClass)) {
+                totalRequestRate -= requestRate;
+            }
+            matlabInput += totalRequestRate.toString();
+
+            matlabInput += " ";
+        }
+        matlabInput += "];\n";
+
+        //Setting Nu (don't know what it is... setting all values to 1)
+        matlabInput += "Nu=[ ";
+        slasIter = slas.iterator();
+        while (slasIter.hasNext()) {
+            slasIter.next();
+            matlabInput += "1 ";
+        }
+        matlabInput += "];\n";
+
+        //Setting s_gamma
+        matlabInput += "s_gamma=sum(gamma);\n";
+
+        slasIter = slas.iterator();
+        SAXBuilder builder = new SAXBuilder();
+        StringReader reader = null;
+        int classId = 0;
+        List<Document> processGraphs = new ArrayList<Document>(slas.size());
+        String temp = "";
+        int nodeCounter = 0;
+        boolean count = true;
+        while (slasIter.hasNext()) {
+            SLA sla = slasIter.next();
+            Process proc = sla.getProcess();
+            String processGraph = proc.getProcessGraph();
+            reader = new StringReader(processGraph);
+            Document d = builder.build(reader);
+            processGraphs.add(d);
+            Element graph = d.getRootElement();
+            Iterator<Element> nodes = graph.getChildren(GRAPH_NODE).iterator();
+            while (nodes.hasNext()) {
+                if (count) {
+                    nodeCounter++;
+                }
+                Element node = nodes.next();
+                Iterator<Element> links = node.getChildren().iterator();
+                while (links.hasNext()) {
+                    Element link = links.next();
+                    temp += "r(" + node.getAttributeValue(GRAPH_ID) + "," + link.getAttributeValue(GRAPH_TO) + ")=" + link.getAttributeValue(GRAPH_PROBABILITY) + ";\n";
+                }
+            }
+            count = false;
+            temp += "r(" + nodeCounter + "," + nodeCounter + ")=0\n";
+            temp += "classe(" + (++classId) + ").r=r;\n";
+            this.processClasses.add(sla.getProcessClass());
+        }
+
+        //Setting N (number of graph nodes)
+        matlabInput += "N=" + nodeCounter + ";\n";
+        matlabInput += temp;
+
+        //Setting root node and sink node
+        Integer rootNodeId = Integer.parseInt(processGraphs.get(0).getRootElement().getChild(GRAPH_ROOT).getAttributeValue(GRAPH_ID));
+        Integer sinkNodeId = Integer.parseInt(processGraphs.get(0).getRootElement().getChild(GRAPH_SINK).getAttributeValue(GRAPH_ID));
+        matlabInput += "root=" + rootNodeId + ";\n";
+        matlabInput += "sink=" + sinkNodeId + ";\n";
+
+        //Assigning concrete operations id to invoke nodes (variable concreteOperationAssignment)
+        //Assigning dummy abstract operation id to invoke nodes (variable abstractMappingAssignment, id generated with variable newId's increment)
+        //Setting node types (variable nodeTypes)
+        //Creating max per-operation rate vector (variable maxOpRates)
+        //Creating broker <--> operations QoS Matrix (variable operationsQoS)
+        int abstractCounter = 0;
+        Hashtable<String, String> concreteOperationAssignments = new Hashtable<String, String>();
+        String abstractMappingAssignment = "";
+        String nodeTypes = "";
+        String maxOpRates = "cap=[ ";
+        String ml = "ML=[ ";
+        String cl = "cL=[";
+        String operationsQoS = "q=[ ";
+        Document d = processGraphs.get(0);
+        Element graph = d.getRootElement();
+        Iterator<Element> nodes = graph.getChildren(GRAPH_NODE).iterator();
+        Integer concreteOperationIDCounter = 0;
+        Vector<ViolationResult> violations = null;
+        if (type.equals(ChangeType.QOS_CHANGE)) {
+            mdal = MDAL.getInstance();
+            PerceivedQoSMDALInterface qosMdal = mdal.getPerceivedQoSMDAL();
+            violations = qosMdal.getViolations();
+
+        }
+        while (nodes.hasNext()) {
+            Element node = nodes.next();
+            if (!(new Integer(node.getAttributeValue(GRAPH_ID)).equals(rootNodeId)) && !(new Integer(node.getAttributeValue(GRAPH_ID)).equals(sinkNodeId)) &&
+                    node.getAttributeValue(GRAPH_NODE_TYPE).equals(GRAPH_NODE_TYPE_INVOKE)) {
+                String serviceName = node.getAttributeValue(GRAPH_NODE_SERVICE_NAME);
+                String operationName = node.getAttributeValue(GRAPH_NODE_OPERATION_NAME);
+                concreteOperationAssignments.put(node.getAttributeValue(GRAPH_ID), "node(" + node.getAttributeValue(GRAPH_ID) + ").cc=[ ");
+                abstractMappingAssignment += "node(" + node.getAttributeValue(GRAPH_ID) + ").abstract=" + (++abstractCounter) + ";\n";
+                AbstractService as = asmi.readAbstractService(serviceName);
+                Iterator<ConcreteService> services = as.getServices().iterator();
+                while (services.hasNext()) {
+                    ConcreteService s = services.next();
+                    Iterator<ConcreteOperation> operations = s.getOperations().iterator();
+                    while (operations.hasNext()) {
+                        ConcreteOperation o = operations.next();
+                        //If the operation isn't working continue
+                        if (!o.getIsWorking()) {
+                            continue;
+                        }
+
+                        if (o.getOperation().getName().equals(operationName)) {
+                            
+                            ViolationResult elem = null;
+                            if(violations != null)
+                                elem = get(violations, o.getService().getId(), operationName);
+                            maxOpRates += o.getSlaConstraints().get(OperationSLAConstraint.REQUEST_RATE) + " ";
+                            ml += "10 ";
+                            cl += "1 1;\n";
+                            String value = concreteOperationAssignments.get(node.getAttributeValue(GRAPH_ID));
+                            value += (++concreteOperationIDCounter).toString() + " ";
+                            this.concreteOperationIDMapping.put(concreteOperationIDCounter, new ConcreteOperationKey(o.getService().getId(), operationName));
+                            concreteOperationAssignments.put(node.getAttributeValue(GRAPH_ID), value);
+                            ArrayList<String> serviceAndOperationName = new ArrayList<String>(2);
+                            serviceAndOperationName.add(serviceName);
+                            serviceAndOperationName.add(operationName);
+                            abstractMapping.put(abstractCounter, serviceAndOperationName);
+                            Hashtable<OperationSLAConstraint, String> slaConstraints = o.getSlaConstraints();
+                            if(elem != null){ //Has value only if type = QOS_CHANGE
+                                if(elem.getViolation().get("RESPONSE_TIME") != null)
+                                    operationsQoS += elem.getViolation().get("RESPONSE_TIME");
+                                else
+                                    operationsQoS += slaConstraints.get(OperationSLAConstraint.RESPONSE_TIME);
+                            }
+                            else
+                                operationsQoS += slaConstraints.get(OperationSLAConstraint.RESPONSE_TIME);
+                            operationsQoS += " " + slaConstraints.get(OperationSLAConstraint.COST) + " " + SERVICE_REPUTATION + " " ;
+                            if(elem != null){
+                                if(elem.getViolation().get("RELIABILITY") != null)
+                                    operationsQoS += elem.getViolation().get("RELIABILITY");
+                                else
+                                    operationsQoS += slaConstraints.get(OperationSLAConstraint.RELIABILITY);
+                            }
+                            else
+                                operationsQoS += slaConstraints.get(OperationSLAConstraint.RELIABILITY);
+                            operationsQoS += ";\n";
+                        }
+                    }
+                }
+
+                String value = concreteOperationAssignments.get(node.getAttributeValue(GRAPH_ID));
+                value += "];\n";
+                concreteOperationAssignments.put(node.getAttributeValue(GRAPH_ID), value);
+            }
+            if (new Integer(node.getAttributeValue(GRAPH_ID)).equals(rootNodeId)) {
+                nodeTypes += "node(" + node.getAttributeValue(GRAPH_ID) + ").tipo=1;\n";
+            } else if (new Integer(node.getAttributeValue(GRAPH_ID)).equals(sinkNodeId)) {
+                nodeTypes += "node(" + node.getAttributeValue(GRAPH_ID) + ").tipo=-1;\n";
+            } else {
+                nodeTypes += "node(" + node.getAttributeValue(GRAPH_ID) + ").tipo=" + nodeTypeMapping.get(node.getAttributeValue(GRAPH_NODE_TYPE)) + ";\n";
+            }
+            nodeTypes += "node(" + node.getAttributeValue(GRAPH_ID) + ").set=" + node.getAttributeValue(GRAPH_ID) + ";\n";
+        }
+
+        maxOpRates += "]';\n";
+        ml += "]';\n";
+        cl = cl.substring(0, cl.length() - 2) + "];\n";
+        operationsQoS = operationsQoS.substring(0, operationsQoS.length() - 2) + " ];\n";
+
+        Enumeration<String> concreteOperationAssgnmentEnum = concreteOperationAssignments.keys();
+        while (concreteOperationAssgnmentEnum.hasMoreElements()) {
+            matlabInput += concreteOperationAssignments.get(concreteOperationAssgnmentEnum.nextElement());
+        }
+
+        matlabInput += abstractMappingAssignment;
+        matlabInput += nodeTypes;
+        matlabInput += maxOpRates;
+
+        //Creating client <--> broker per-processClass QoS Matrix
+        matlabInput += "QoS=[";
+        slasIter = slas.iterator();
+        while (slasIter.hasNext()) {
+            SLA sla = slasIter.next();
+            Hashtable<ProcessSLAConstraint, String> slaConstraints = sla.getSlaConstraints();
+            matlabInput += slaConstraints.get(ProcessSLAConstraint.RESPONSE_TIME) + " " + slaConstraints.get(ProcessSLAConstraint.COST) + " " + PROCESS_REPUTATION + " " + slaConstraints.get(ProcessSLAConstraint.RELIABILITY) + ";\n";
+        }
+        matlabInput = matlabInput.substring(0, matlabInput.length() - 2) + "];\n";
+
+        //Adding broker <--> operations QoS Matrix to matlabInput
+        matlabInput += operationsQoS;
+
+        //Setting ML don't know what it is
+        matlabInput += ml;
+
+        //Setting cL don't know what it is
+        matlabInput += cl;
+
+        matlabInput += "num_c_service=max(size(cL));\n";
+        matlabInput += "QoS(:,4)=log(QoS(:,4));\n";
+        matlabInput += "q(:,4)=log(q(:,4));\n";
+        matlabInput += "w=[0.001 0.999 0 0];\n";
+        matlabInput += "remove_s=[];\n";
+        matlabInput += "remove_c=[];\n";
+        matlabInput += "cap(remove_s)=[ ];\n";
+        matlabInput += "gamma(remove_c)=[];\n";
+        matlabInput += "classe(remove_c)=[ ];\n";
+        matlabInput += "QoS(remove_c,:)=[ ];\n";
+        matlabInput += "q(remove_s,:)=[ ];\n";
+        matlabInput += "K=length(gamma);\n";
+        matlabInput += "s_gamma=sum(gamma);\n";
+        matlabInput += "maxS=1;\n";
+        matlabInput += "for i=1:N\n";
+        matlabInput += "    if(~node(i).tipo)\n";
+        matlabInput += "        node(i).sets=powerset(node(i).cc);\n";
+        matlabInput += "        for J=1:length(node(i).sets)\n";
+        matlabInput += "            maxS=max(maxS,length(node(i).sets{J}));\n";
+        matlabInput += "        end\n";
+        matlabInput += "        conta=0;\n";
+        matlabInput += "        for j=1:length(node(i).sets)\n";
+        matlabInput += "            node(i).setr(j)=log(1-prod(1-exp(q(node(i).sets{j},4))));\n";
+        matlabInput += "            node(i).setc(j)=sum(q(node(i).sets{j},2));\n";
+        matlabInput += "            node(i).sett(j)=min(q(node(i).sets{j},1));\n";
+        matlabInput += "            if enable_retry\n";
+        matlabInput += "            if(length(node(i).sets{j})==2)\n";
+        matlabInput += "                app=node(i).sets{j};\n";
+        matlabInput += "                conta=conta+1;\n";
+        matlabInput += "                node(i).sets1{conta}=app;\n";
+        matlabInput += "                node(i).setr1(conta)=node(i).setr(j);\n";
+        matlabInput += "                node(i).setc1(conta)=q(app(1),2)+(1-exp(q(app(1),4)))*q(app(2),2);\n";
+        matlabInput += "                node(i).sett1(conta)=q(app(1),1)+(1-exp(q(app(1),4)))*q(app(2),1);\n";
+        matlabInput += "                conta=conta+1;\n";
+        matlabInput += "                node(i).sets1{conta}=app([2 1]);\n";
+        matlabInput += "                node(i).setr1(conta)=node(i).setr(j);\n";
+        matlabInput += "                node(i).setc1(conta)=q(app(2),2)+(1-exp(q(app(2),4)))*q(app(1),2);\n";
+        matlabInput += "                node(i).sett1(conta)=q(app(2),1)+(1-exp(q(app(2),4)))*q(app(1),1);\n";
+        matlabInput += "            end\n";
+        matlabInput += "            else\n";
+        matlabInput += "                node(i).sets1=[];\n";
+        matlabInput += "            end\n";
+        matlabInput += "        end\n";
+        matlabInput += "    end\n";
+        matlabInput += "end\n";
+
+        smi.close();
+        asmi.close();
+        pmi.close();
+
+
+        String inputFileName = this.properties.getProperty(MATLAB_WORKING_DIRECTORY) + "/" + this.properties.getProperty(MATLAB_INPUT_FILE_NAME);
+        File inputFile = new File(inputFileName);
+        if (inputFile.exists()) {
+            inputFile.delete();
+        }
+        inputFile.createNewFile();
+        inputFile.setExecutable(true);
+
+        FileOutputStream fos = new FileOutputStream(inputFile);
+        fos.write(matlabInput.getBytes());
+        fos.close();
+    }
+
+    @Override
+    public boolean invoke(String processName) throws IOException, InterruptedException {
+        boolean result = false;
+
+        String matlabExecPath = this.properties.getProperty(MATLAB_EXEC_PATH);
+        String matlabOptions = this.properties.getProperty(MATLAB_OPTIONS);
+        String matlabWorkingDirectory = this.properties.getProperty(MATLAB_WORKING_DIRECTORY);
+        String matlabCommand = this.properties.getProperty(MATLAB_COMMAND);
+
+        String groupJFileName = matlabWorkingDirectory + "/" + this.properties.getProperty(MATLAB_OUTPUT_GROUP_J_FILE_NAME);
+        String solutionFileName = matlabWorkingDirectory + "/" + this.properties.getProperty(MATLAB_OUTPUT_SOLUTION_FILE_NAME);
+
+        File groupJFile = new File(groupJFileName);
+        if (groupJFile.exists()) {
+            groupJFile.delete();
+        }
+
+        File solutionFile = new File(solutionFileName);
+        if (solutionFile.exists()) {
+            solutionFile.delete();
+        }
+
+        String[] options = matlabOptions.split("[ ]+");
+        String[] command = new String[options.length + 2];
+        command[0] = matlabExecPath;
+        for (int i = 0; i < options.length; i++) {
+            command[i + 1] = options[i];
+        }
+        command[options.length + 1] = "cd " + matlabWorkingDirectory + ", " + matlabCommand + ", exit";
+        for (int i = 0; i < command.length; i++) {
+            System.out.print(command[i] + " ");
+        }
+        System.out.println();
+
+        java.lang.Process process = Runtime.getRuntime().exec(command);
+
+        process.waitFor();
+
+        if (groupJFile.exists() && solutionFile.exists()) {
+            
+            File processGroupJFile = new File(matlabWorkingDirectory + "/" + processName + "_" + this.properties.getProperty(MATLAB_OUTPUT_GROUP_J_FILE_NAME));
+            File processSolutionFile = new File(matlabWorkingDirectory + "/" + processName + "_" + this.properties.getProperty(MATLAB_OUTPUT_SOLUTION_FILE_NAME));
+
+            if (processGroupJFile.exists()) {
+                processGroupJFile.delete();
+            }
+            if (processSolutionFile.exists()) {
+                processSolutionFile.delete();
+            }
+
+            processGroupJFile.createNewFile();
+            processSolutionFile.createNewFile();
+
+            groupJFile.renameTo(processGroupJFile);
+            solutionFile.renameTo(processSolutionFile);
+
+            result = true;
+
+            FileReader solFR = new FileReader(processSolutionFile);
+            BufferedReader solBR = new BufferedReader(solFR);
+            String firstLine = solBR.readLine();
+            //System.out.println("RESULT TRUE" + firstLine);
+
+            if (firstLine.contains(properties.getProperty(MATLAB_NOT_FOUND_SOLUTION_MESSAGE))) {
+                result = false;
+            }
+
+            solBR.close();
+            solFR.close();
+        }
+
+        return result;
+    }
+
+    @Override
+    public void parseAndSaveOutput(String processName) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, BadArgumentsMDALException, MDALException {
+        MDAL mdal = MDAL.getInstance();
+        SolutionsMDALInterface solutionMDAL = mdal.getSolutionsMDAL();
+
+        Iterator<String> processClassIterator = this.processClasses.iterator();
+        while (processClassIterator.hasNext()) {
+
+            String processClass = processClassIterator.next();            
+            List<ServiceNode> solution = this.parseMatlabOutput(processName, processClass);
+            if (solution != null) {
+                solutionMDAL.updateSolution(processName, processClass, solution);
+            }
+        }
+        solutionMDAL.close();
+    }
+
+    private List<ServiceNode> parseMatlabOutput(String processName, String processClass) throws FileNotFoundException, IOException, ClassNotFoundException, InstantiationException, IllegalAccessException, NoSuchAbstractServiceMDALException, MDALException {
+
+        String groupFilePath = this.properties.getProperty(MATLAB_WORKING_DIRECTORY) + "/" + processName + "_" + this.properties.getProperty(MATLAB_OUTPUT_GROUP_J_FILE_NAME);
+        String solutionFilePath = this.properties.getProperty(MATLAB_WORKING_DIRECTORY) + "/" + processName + "_" + this.properties.getProperty(MATLAB_OUTPUT_SOLUTION_FILE_NAME);
+
+        FileReader groupFr = new FileReader(groupFilePath);
+        FileReader solutionFr = new FileReader(solutionFilePath);
+        BufferedReader groupBr = new BufferedReader(groupFr);
+        BufferedReader solutionBr = new BufferedReader(solutionFr);
+
+        MDAL mdal = MDAL.getInstance();
+        ConcreteServicesMDALInterface serviceMDAL = mdal.getConcreteServicesMDAL();
+        ConcreteOperationsMDALInterface operationMDAL = mdal.getConcreteOperationsMDAL();
+
+        List<ServiceNode> serviceNodes = new ArrayList<ServiceNode>();
+        Integer groupIdCounter = 0;
+        Integer oneGroupIdNumber = 0;
+
+        String groupLine = groupBr.readLine();
+        String solutionLine = solutionBr.readLine();
+        while (groupLine != null && solutionLine != null) {
+            String[] groupColumns = groupLine.split("[^0-9.]+");
+            String[] solutionColumns = solutionLine.split("[^0-9.]+");
+
+            if (groupColumns.length == 0 || solutionColumns.length == 0) {
+                break;
+            }
+
+            Integer groupId = new Float(groupColumns[GROUP_COLUMN_INDEX]).intValue();
+            //System.out.println("GROUPIDID " + groupId);
+            Integer abstractOperationId = new Float(groupColumns[ABSTRACT_OPERATION_COLUMN_INDEX]).intValue();
+            String serviceName = abstractMapping.get(abstractOperationId).get(SERVICE_NAME_POSITION);
+            String operationName = abstractMapping.get(abstractOperationId).get(OPERATION_NAME_POSITION);
+
+            Integer processClassId = processClasses.indexOf(processClass) + CLASS_COLUMN_START_INDEX;
+            //System.out.println("GROUPID " + processClassId);
+            if (groupId == 1) {
+                oneGroupIdNumber++;
+            }
+
+            GroupNode groupNode = new GroupNode();
+            //System.out.println("GROUPID " + groupIdCounter);
+            groupNode.setGroupId(groupIdCounter);
+            groupIdCounter++;
+            groupNode.setProbability(Float.parseFloat(solutionColumns[processClassId]));
+
+            if (oneGroupIdNumber == 2) {
+                groupNode.setType(GroupNode.Type.ALTERNATE);
+            } else {
+                groupNode.setType(GroupNode.Type.PARALLEL_OR);
+            }
+
+            List<EndpointNode> endpointNodes = new ArrayList<EndpointNode>();
+            for (int i = CONCRETE_OPERATION_COLUMN_START_INDEX; i < groupColumns.length; i++) {
+                Integer operationIdKey = new Float(groupColumns[i]).intValue();
+                if (operationIdKey == 0) {
+                    continue;
+                }
+                ConcreteOperationKey operationId = this.concreteOperationIDMapping.get(operationIdKey);
+
+                ConcreteOperation operation = operationMDAL.readConcreteOperation(operationId.getServiceID(), operationId.getoperationName());
+
+                EndpointNode endpointNode = new EndpointNode();
+                endpointNode.setEndpointURL(operation.getService().getEndpointURL());
+                endpointNode.setTargetNameSpace(operation.getService().getService().getNameSpace());
+                endpointNode.setServiceId(operation.getService().getId());
+
+                endpointNodes.add(endpointNode);
+            }
+
+            groupNode.setEndpoints(endpointNodes);
+
+            //Find the service in the serviceNode list (or create it)
+            //and insert the groupNode in it
+            Iterator<ServiceNode> serviceNodeIterator = serviceNodes.iterator();
+            ServiceNode serviceNode = null;
+            ServiceNode serviceNodeTemp = null;
+            while (serviceNodeIterator.hasNext()) {
+                serviceNodeTemp = serviceNodeIterator.next();
+                if (serviceNodeTemp.getServiceName().equals(serviceName)) {
+
+                    serviceNode = serviceNodeTemp;
+                    break;
+                }
+            }
+            if (serviceNode == null) {
+                OperationNode operationNode = new OperationNode();
+                operationNode.setOperationName(operationName);
+                operationNode.setGroups(new ArrayList<GroupNode>());
+                operationNode.getGroups().add(groupNode);
+
+                serviceNode = new ServiceNode();
+                serviceNode.setServiceName(serviceName);
+                serviceNode.setOperations(new ArrayList<OperationNode>());
+                serviceNode.getOperations().add(operationNode);
+
+                serviceNodes.add(serviceNode);
+
+            } else {
+                Iterator<OperationNode> operationNodeIterator = serviceNode.getOperations().iterator();
+                OperationNode operationNode = null;
+                OperationNode operationNodeTemp = null;
+                while (operationNodeIterator.hasNext()) {                    
+                    operationNodeTemp = operationNodeIterator.next();
+                    if (operationNodeTemp.getOperationName().equals(operationName)) {
+                        operationNode = operationNodeTemp;
+                        break;
+                    }
+                }
+                if (operationNode == null) {
+                    operationNode = new OperationNode();
+                    operationNode.setOperationName(operationName);
+                    operationNode.setGroups(new ArrayList<GroupNode>());
+                    operationNode.getGroups().add(groupNode);
+
+                    serviceNode.getOperations().add(operationNode);
+                } else {
+                    operationNode.getGroups().add(groupNode);
+                }
+            }
+
+            //serviceNodes.add(serviceNode);
+
+            groupLine = groupBr.readLine();
+            solutionLine = solutionBr.readLine();
+        }
+
+        groupFr.close();
+        solutionFr.close();
+        groupBr.close();
+        solutionBr.close();
+
+        if (serviceNodes.isEmpty()) {
+            serviceNodes = null;
+        }
+
+        /*
+         *  The follow lines check the Tree builted before
+         */
+
+        /*Iterator<ServiceNode> serviceNodeIterator = serviceNodes.iterator();
+        while (serviceNodeIterator.hasNext()) {
+        ServiceNode service = serviceNodeIterator.next();
+        List<org.moses.entity.solution.OperationNode> operationNode = service.getOperations();
+        Iterator<org.moses.entity.solution.OperationNode> opeIt = operationNode.iterator();
+
+        System.out.println("ServiceName: " + service.getServiceName());
+        while (opeIt.hasNext()) {
+
+        org.moses.entity.solution.OperationNode operation = opeIt.next();
+        List<org.moses.entity.solution.GroupNode> groupNode = operation.getGroups();
+        Iterator<org.moses.entity.solution.GroupNode> grouIt = groupNode.iterator();
+
+        System.out.println("---> OperationName: " + operation.getOperationName());
+
+        while (grouIt.hasNext()) {
+
+        GroupNode group = grouIt.next();
+
+        System.out.println("    ---> GroupId: " + group.getGroupId() + " Probabiliy: " + group.getProbability());
+
+        List<org.moses.entity.solution.EndpointNode> endpointNode = group.getEndpoints();
+        Iterator<org.moses.entity.solution.EndpointNode> endpointIt = endpointNode.iterator();
+
+        while (endpointIt.hasNext()) {
+
+        EndpointNode endpoint = endpointIt.next();
+        System.out.println("        ---> Endpoint" + endpoint.getEndpointURL() + " GroupID: " + group.getGroupId());
+        }
+
+        }
+        }
+        }*/
+
+        return serviceNodes;
+    }
+}

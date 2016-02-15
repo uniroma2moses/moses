@@ -1,0 +1,4 @@
+Bundle-Name: CompositeFrontend
+Bundle-SymbolicName: CompositeFrontend
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0
