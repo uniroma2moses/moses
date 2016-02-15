@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ns0="http://xml.netbeans.org/schema/ESECProcess">
+  <SOAP-ENV:Body SOAP-ENV:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+    <m:ESECProcessOperationResponse xmlns:m="ESECCompositeApplication">
+      <part1 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="ioElement">
+        <ioElement xmlns="http://xml.netbeans.org/schema/ESECProcess">27</ioElement>
+      </part1>
+    </m:ESECProcessOperationResponse>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

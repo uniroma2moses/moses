@@ -1,0 +1,4 @@
+Bundle-Name: ESECCompositeApplication
+Bundle-SymbolicName: ESECCompositeApplication
+Bundle-ManifestVersion: 2
+Bundle-Version: 1.0.0

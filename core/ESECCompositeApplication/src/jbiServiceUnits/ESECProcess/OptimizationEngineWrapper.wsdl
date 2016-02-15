@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="OptimizationEngineWrapper" targetNamespace="http://enterprise.netbeans.org/bpel/OptimizationEngineWrapper" xmlns:tns="http://enterprise.netbeans.org/bpel/OptimizationEngineWrapper" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:ns="http://optimization_engine.moses.org/">
+    <import location="http://sla-matlab:8080/OptimizationEngineService/OptimizationEngine?wsdl" namespace="http://optimization_engine.moses.org/"/>
+    <plnk:partnerLinkType name="OptimizationEngineLinkType">
+        <plnk:role name="OptimizationEngineRole" portType="ns:OptimizationEngine"/>
+    </plnk:partnerLinkType>
+</definitions>
+

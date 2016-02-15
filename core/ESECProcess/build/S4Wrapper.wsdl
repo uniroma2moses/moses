@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<definitions
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" name="S4Wrapper" targetNamespace="http://enterprise.netbeans.org/bpel/S4Wrapper" xmlns:tns="http://enterprise.netbeans.org/bpel/S4Wrapper" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype" xmlns:ns="http://ce.uniroma2.it">
+    <import location="http://partner:8084/axis2/services/S4?wsdl" namespace="http://ce.uniroma2.it"/>
+    <plnk:partnerLinkType name="S4LinkType">
+        <plnk:role name="S4Role" portType="ns:S4PortType"/>
+    </plnk:partnerLinkType>
+</definitions>
+

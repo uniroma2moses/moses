@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<casa xmlns="http://java.sun.com/xml/ns/casa" xmlns:ns1="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" xmlns:ns2="http://optimization_engine.moses.org/" xmlns:ns3="ESECCompositeApplication" xmlns:ns4="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" xmlns:ns5="http://enterprise.netbeans.org/bpel/ESECProcess/ESECProcess" xmlns:xlink="http://www.w3.org/2000/xlink">
+    <endpoints>
+        <endpoint endpoint-name="port" interface-name="ns1:jdbcPortType" name="endpoint1" service-name="ns1:service"/>
+        <endpoint endpoint-name="OptimizationEnginePort" interface-name="ns2:OptimizationEngine" name="endpoint2" service-name="ns2:OptimizationEngineService"/>
+        <endpoint endpoint-name="casaPort1" interface-name="ns4:ESECProcessPortType" name="endpoint3" service-name="ns3:ESECCompositeApplicationService1"/>
+        <endpoint display-name="ESECProcessPL" endpoint-name="ESECProcessPortTypeRole_myRole" file-path="ESECProcess.bpel" interface-name="ns4:ESECProcessPortType" name="endpoint4" process-name="ESECProcess" service-name="ns5:ESECProcessPL"/>
+        <endpoint display-name="OptimizationPL" endpoint-name="OptimizationEngineRole_partnerRole" file-path="ESECProcess.bpel" interface-name="ns2:OptimizationEngine" name="endpoint5" process-name="ESECProcess" service-name="ns5:OptimizationPL"/>
+        <endpoint display-name="PartnerLink1" endpoint-name="jdbcPortTypeRole_partnerRole" file-path="ESECProcess.bpel" interface-name="ns1:jdbcPortType" name="endpoint6" process-name="ESECProcess" service-name="ns5:PartnerLink1"/>
+    </endpoints>
+    <service-units>
+        <service-engine-service-unit artifacts-zip="ESECProcess.jar" component-name="sun-bpel-engine" defined="true" description="Represents this Service Unit" internal="true" name="ESECCompositeApplication-ESECProcess" unit-name="ESECProcess" unknown="false" x="147" y="97">
+            <provides endpoint="endpoint4"/>
+            <consumes endpoint="endpoint5"/>
+            <consumes endpoint="endpoint6"/>
+        </service-engine-service-unit>
+        <binding-component-service-unit artifacts-zip="sun-database-binding.jar" component-name="sun-database-binding" description="Represents this Service Unit" name="ESECCompositeApplication-sun-database-binding" unit-name="sun-database-binding">
+            <ports>
+                <port x="67" y="115">
+                    <link xlink:href="../jbiServiceUnits/ESECProcess/JDBCComponent.wsdl#xpointer(/definitions/service[@name='service']/port[@name='port'])" xlink:type="simple"/>
+                    <consumes endpoint="endpoint1"/>
+                    <provides endpoint="endpoint1"/>
+                </port>
+            </ports>
+        </binding-component-service-unit>
+        <binding-component-service-unit artifacts-zip="sun-http-binding.jar" component-name="sun-http-binding" description="Represents this Service Unit" name="ESECCompositeApplication-sun-http-binding" unit-name="sun-http-binding">
+            <ports>
+                <port bindingType="soap" x="67" y="284">
+                    <link xlink:href="../jbiasa/ESECCompositeApplication.wsdl#xpointer(/definitions/service[@name='ESECCompositeApplicationService1']/port[@name='casaPort1'])" xlink:type="simple"/>
+                    <consumes endpoint="endpoint3"/>
+                    <provides endpoint="endpoint3"/>
+                </port>
+                <port x="67" y="37">
+                    <link xlink:href="../jbiServiceUnits/ESECProcess/sla-matlab_8080/OptimizationEngineService/OptimizationEngine.wsdl#xpointer(/definitions/service[@name='OptimizationEngineService']/port[@name='OptimizationEnginePort'])" xlink:type="simple"/>
+                    <consumes endpoint="endpoint2"/>
+                    <provides endpoint="endpoint2"/>
+                </port>
+            </ports>
+        </binding-component-service-unit>
+    </service-units>
+    <connections>
+        <connection consumer="endpoint3" provider="endpoint4" state="new"/>
+        <connection consumer="endpoint5" provider="endpoint2" state="unchanged"/>
+        <connection consumer="endpoint6" provider="endpoint1" state="unchanged"/>
+    </connections>
+    <porttypes>
+        <link xlink:href="../jbiasa/ESECCompositeApplication.wsdl#xpointer(/definitions/portType[@name='dummyCasaPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S1.wsdl#xpointer(/definitions/portType[@name='S1PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S3.wsdl#xpointer(/definitions/portType[@name='S3PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S4.wsdl#xpointer(/definitions/portType[@name='S4PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S5.wsdl#xpointer(/definitions/portType[@name='S5PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S6.wsdl#xpointer(/definitions/portType[@name='S6PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S2.wsdl#xpointer(/definitions/portType[@name='S2PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S1.wsdl#xpointer(/definitions/portType[@name='S1PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S3.wsdl#xpointer(/definitions/portType[@name='S3PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S4.wsdl#xpointer(/definitions/portType[@name='S4PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S5.wsdl#xpointer(/definitions/portType[@name='S5PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S6.wsdl#xpointer(/definitions/portType[@name='S6PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S2.wsdl#xpointer(/definitions/portType[@name='S2PortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/ESECProcess.wsdl#xpointer(/definitions/portType[@name='ESECProcessPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/sla-matlab_8080/OptimizationEngineService/OptimizationEngine.wsdl#xpointer(/definitions/portType[@name='OptimizationEngine'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/JDBCComponent.wsdl#xpointer(/definitions/portType[@name='jdbcPortType'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECCompositeApplication.wsdl#xpointer(/definitions/portType[@name='dummyCasaPortType'])" xlink:type="simple"/>
+    </porttypes>
+    <bindings>
+        <link xlink:href="../jbiasa/ESECCompositeApplication.wsdl#xpointer(/definitions/binding[@name='casaBinding1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S1.wsdl#xpointer(/definitions/binding[@name='S1Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S1.wsdl#xpointer(/definitions/binding[@name='S1Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S1.wsdl#xpointer(/definitions/binding[@name='S1HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S3.wsdl#xpointer(/definitions/binding[@name='S3Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S3.wsdl#xpointer(/definitions/binding[@name='S3Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S3.wsdl#xpointer(/definitions/binding[@name='S3HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S4.wsdl#xpointer(/definitions/binding[@name='S4Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S4.wsdl#xpointer(/definitions/binding[@name='S4Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S4.wsdl#xpointer(/definitions/binding[@name='S4HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S5.wsdl#xpointer(/definitions/binding[@name='S5Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S5.wsdl#xpointer(/definitions/binding[@name='S5Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S5.wsdl#xpointer(/definitions/binding[@name='S5HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S6.wsdl#xpointer(/definitions/binding[@name='S6Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S6.wsdl#xpointer(/definitions/binding[@name='S6Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S6.wsdl#xpointer(/definitions/binding[@name='S6HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S2.wsdl#xpointer(/definitions/binding[@name='S2Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S2.wsdl#xpointer(/definitions/binding[@name='S2Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S2.wsdl#xpointer(/definitions/binding[@name='S2HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S1.wsdl#xpointer(/definitions/binding[@name='S1Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S1.wsdl#xpointer(/definitions/binding[@name='S1Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S1.wsdl#xpointer(/definitions/binding[@name='S1HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S3.wsdl#xpointer(/definitions/binding[@name='S3Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S3.wsdl#xpointer(/definitions/binding[@name='S3Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S3.wsdl#xpointer(/definitions/binding[@name='S3HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S4.wsdl#xpointer(/definitions/binding[@name='S4Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S4.wsdl#xpointer(/definitions/binding[@name='S4Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S4.wsdl#xpointer(/definitions/binding[@name='S4HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S5.wsdl#xpointer(/definitions/binding[@name='S5Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S5.wsdl#xpointer(/definitions/binding[@name='S5Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S5.wsdl#xpointer(/definitions/binding[@name='S5HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S6.wsdl#xpointer(/definitions/binding[@name='S6Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S6.wsdl#xpointer(/definitions/binding[@name='S6Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S6.wsdl#xpointer(/definitions/binding[@name='S6HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S2.wsdl#xpointer(/definitions/binding[@name='S2Soap11Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S2.wsdl#xpointer(/definitions/binding[@name='S2Soap12Binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S2.wsdl#xpointer(/definitions/binding[@name='S2HttpBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/sla-matlab_8080/OptimizationEngineService/OptimizationEngine.wsdl#xpointer(/definitions/binding[@name='OptimizationEnginePortBinding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/JDBCComponent.wsdl#xpointer(/definitions/binding[@name='binding'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECCompositeApplication.wsdl#xpointer(/definitions/binding[@name='casaBinding1'])" xlink:type="simple"/>
+    </bindings>
+    <services>
+        <link xlink:href="../jbiasa/ESECCompositeApplication.wsdl#xpointer(/definitions/service[@name='ESECCompositeApplicationService1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S1.wsdl#xpointer(/definitions/service[@name='S1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S3.wsdl#xpointer(/definitions/service[@name='S3'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S4.wsdl#xpointer(/definitions/service[@name='S4'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S5.wsdl#xpointer(/definitions/service[@name='S5'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S6.wsdl#xpointer(/definitions/service[@name='S6'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/META-INF/ESECProcess/src/_references/_cache/partner_8084/axis2/services/S2.wsdl#xpointer(/definitions/service[@name='S2'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S1.wsdl#xpointer(/definitions/service[@name='S1'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S3.wsdl#xpointer(/definitions/service[@name='S3'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S4.wsdl#xpointer(/definitions/service[@name='S4'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S5.wsdl#xpointer(/definitions/service[@name='S5'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S6.wsdl#xpointer(/definitions/service[@name='S6'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/localhost_8084/axis2/services/S2.wsdl#xpointer(/definitions/service[@name='S2'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/sla-matlab_8080/OptimizationEngineService/OptimizationEngine.wsdl#xpointer(/definitions/service[@name='OptimizationEngineService'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECProcess/JDBCComponent.wsdl#xpointer(/definitions/service[@name='service'])" xlink:type="simple"/>
+        <link xlink:href="../jbiServiceUnits/ESECCompositeApplication.wsdl#xpointer(/definitions/service[@name='ESECCompositeApplicationService1'])" xlink:type="simple"/>
+    </services>
+    <regions>
+        <region name="WSDL Endpoints" width="150"/>
+        <region name="JBI Modules" width="500"/>
+        <region name="External Modules" width="200"/>
+    </regions>
+</casa>

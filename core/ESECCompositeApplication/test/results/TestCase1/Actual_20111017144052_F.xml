@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/" 
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+    xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ http://schemas.xmlsoap.org/soap/envelope/">
+  <SOAP-ENV:Body>
+    <SOAP-ENV:Fault>
+      <faultcode>SOAP-ENV:Server</faultcode>
+      <faultstring>BPCOR-6135: A fault was not handled in the process scope; Fault Name is {http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling}java.lang.Exception; Fault Data is &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&amp;lt;jbi:message xmlns:sxeh=&amp;quot;http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling&amp;quot; type=&amp;quot;sxeh:faultMessage&amp;quot; version=&amp;quot;1.0&amp;quot; xmlns:jbi=&amp;quot;http://java.sun.com/xml/ns/jbi/wsdl-11-wrapper&amp;quot;&amp;gt;&amp;lt;jbi:part xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xsi:type=&amp;quot;sxeh:ErrorInfoType&amp;quot;&amp;gt;&amp;lt;pojoException xmlns=&amp;quot;http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling&amp;quot;&amp;gt;&amp;lt;class&amp;gt;org.moses.proxy.Proxy&amp;lt;/class&amp;gt;&amp;lt;operation&amp;gt;public org.w3c.dom.Node org.moses.proxy.Proxy.invoke(org.w3c.dom.Node) throws java.io.FileNotFoundException,java.io.IOException,java.lang.ClassNotFoundException,java.lang.InstantiationException,java.lang.IllegalAccessException,org.moses.exception.BadArgumentsMDALException,org.moses.exception.NoSuchSolutionMDALException,org.moses.exception.MDALException,javax.xml.soap.SOAPException,java.lang.InterruptedException,java.lang.Exception&amp;lt;/operation&amp;gt;&amp;lt;exception&amp;gt;java.lang.Exception&amp;lt;/exception&amp;gt;&amp;lt;activity&amp;gt;Invoke5&amp;lt;/activity&amp;gt;&amp;lt;activityLineNumber&amp;gt;372&amp;lt;/activityLineNumber&amp;gt;&amp;lt;message&amp;gt;No usable services for this solution&amp;lt;/message&amp;gt;&amp;lt;cause/&amp;gt;&amp;lt;stackTrace&amp;gt;java.lang.Exception: No usable services for this solution
+	at org.moses.proxy.Proxy.parWsInvoke(Proxy.java:237)
+	at org.moses.proxy.Proxy.invoke(Proxy.java:300)
+	at sun.reflect.GeneratedMethodAccessor78.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.sun.jbi.engine.bpel.core.bpel.xpath.functions.POJOFunction.invoke(POJOFunction.java:116)
+	at com.sun.jbi.engine.bpel.core.bpel.xpath.functions.POJOFunction.invoke(POJOFunction.java:81)
+	at org.apache.commons.jxpath.ri.compiler.ExtensionFunction.computeValue(ExtensionFunction.java:109)
+	at org.apache.commons.jxpath.ri.compiler.ExtensionFunction.compute(ExtensionFunction.java:86)
+	at org.apache.commons.jxpath.ri.compiler.Expression.iteratePointers(Expression.java:95)
+	at org.apache.commons.jxpath.ri.JXPathContextReferenceImpl.iteratePointers(JXPathContextReferenceImpl.java:548)
+	at org.apache.commons.jxpath.ri.JXPathContextReferenceImpl.iteratePointers(JXPathContextReferenceImpl.java:544)
+	at com.sun.jbi.engine.bpel.core.bpel.util.FromEvaluatorFactory$FromExpressionEvaluator.evaluateFrom(FromEvaluatorFactory.java:219)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CopyUnitImpl.doCopy(CopyUnitImpl.java:78)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.AssignUnitImpl.executeCopies(AssignUnitImpl.java:382)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.AssignUnitImpl.doAction(AssignUnitImpl.java:172)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CodeReUseHelper.executeChildActivities(CodeReUseHelper.java:66)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.executeChildActivities(StructuredActivityUnitImpl.java:191)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doAction(StructuredActivityUnitImpl.java:92)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.SequenceUnitImpl.doAction(SequenceUnitImpl.java:94)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CodeReUseHelper.executeChildActivities(CodeReUseHelper.java:66)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.executeChildActivities(StructuredActivityUnitImpl.java:191)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doAction(StructuredActivityUnitImpl.java:92)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.IfUnitImpl.doAction(IfUnitImpl.java:151)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CodeReUseHelper.executeChildActivities(CodeReUseHelper.java:66)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.executeChildActivities(StructuredActivityUnitImpl.java:191)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doResumeAction(StructuredActivityUnitImpl.java:146)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.ActivityUnitImpl.doPassControlToParent(ActivityUnitImpl.java:253)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.RepeatUntilUnitImpl.doResumeAction(RepeatUntilUnitImpl.java:149)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.ActivityUnitImpl.doPassControlToParent(ActivityUnitImpl.java:253)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doResumeAction(StructuredActivityUnitImpl.java:159)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.ActivityUnitImpl.doPassControlToParent(ActivityUnitImpl.java:253)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.FlowUnitImpl.doAction(FlowUnitImpl.java:108)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.impl.BPELInterpreter.execute(BPELInterpreter.java:163)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.BusinessProcessInstanceThread.execute(BusinessProcessInstanceThread.java:98)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.impl.BPELProcessManagerImpl.process(BPELProcessManagerImpl.java:1133)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.impl.EngineImpl.process(EngineImpl.java:280)
+	at com.sun.jbi.engine.bpel.BPELSEInOutThread.run(BPELSEInOutThread.java:186)
+&amp;lt;/stackTrace&amp;gt;&amp;lt;/pojoException&amp;gt;&amp;lt;/jbi:part&amp;gt;&amp;lt;/jbi:message&amp;gt;. Sending errors for the pending requests in the process scope before terminating the process instance</faultstring>
+      <faultactor>sun-bpel-engine</faultactor>
+      <detail>
+        <detailText>BPCOR-6135: A fault was not handled in the process scope; Fault Name is {http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling}java.lang.Exception; Fault Data is &amp;lt;?xml version=&amp;quot;1.0&amp;quot; encoding=&amp;quot;UTF-8&amp;quot;?&amp;gt;&amp;lt;jbi:message xmlns:sxeh=&amp;quot;http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling&amp;quot; type=&amp;quot;sxeh:faultMessage&amp;quot; version=&amp;quot;1.0&amp;quot; xmlns:jbi=&amp;quot;http://java.sun.com/xml/ns/jbi/wsdl-11-wrapper&amp;quot;&amp;gt;&amp;lt;jbi:part xmlns:xsi=&amp;quot;http://www.w3.org/2001/XMLSchema-instance&amp;quot; xsi:type=&amp;quot;sxeh:ErrorInfoType&amp;quot;&amp;gt;&amp;lt;pojoException xmlns=&amp;quot;http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling&amp;quot;&amp;gt;&amp;lt;class&amp;gt;org.moses.proxy.Proxy&amp;lt;/class&amp;gt;&amp;lt;operation&amp;gt;public org.w3c.dom.Node org.moses.proxy.Proxy.invoke(org.w3c.dom.Node) throws java.io.FileNotFoundException,java.io.IOException,java.lang.ClassNotFoundException,java.lang.InstantiationException,java.lang.IllegalAccessException,org.moses.exception.BadArgumentsMDALException,org.moses.exception.NoSuchSolutionMDALException,org.moses.exception.MDALException,javax.xml.soap.SOAPException,java.lang.InterruptedException,java.lang.Exception&amp;lt;/operation&amp;gt;&amp;lt;exception&amp;gt;java.lang.Exception&amp;lt;/exception&amp;gt;&amp;lt;activity&amp;gt;Invoke5&amp;lt;/activity&amp;gt;&amp;lt;activityLineNumber&amp;gt;372&amp;lt;/activityLineNumber&amp;gt;&amp;lt;message&amp;gt;No usable services for this solution&amp;lt;/message&amp;gt;&amp;lt;cause/&amp;gt;&amp;lt;stackTrace&amp;gt;java.lang.Exception: No usable services for this solution
+	at org.moses.proxy.Proxy.parWsInvoke(Proxy.java:237)
+	at org.moses.proxy.Proxy.invoke(Proxy.java:300)
+	at sun.reflect.GeneratedMethodAccessor78.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at com.sun.jbi.engine.bpel.core.bpel.xpath.functions.POJOFunction.invoke(POJOFunction.java:116)
+	at com.sun.jbi.engine.bpel.core.bpel.xpath.functions.POJOFunction.invoke(POJOFunction.java:81)
+	at org.apache.commons.jxpath.ri.compiler.ExtensionFunction.computeValue(ExtensionFunction.java:109)
+	at org.apache.commons.jxpath.ri.compiler.ExtensionFunction.compute(ExtensionFunction.java:86)
+	at org.apache.commons.jxpath.ri.compiler.Expression.iteratePointers(Expression.java:95)
+	at org.apache.commons.jxpath.ri.JXPathContextReferenceImpl.iteratePointers(JXPathContextReferenceImpl.java:548)
+	at org.apache.commons.jxpath.ri.JXPathContextReferenceImpl.iteratePointers(JXPathContextReferenceImpl.java:544)
+	at com.sun.jbi.engine.bpel.core.bpel.util.FromEvaluatorFactory$FromExpressionEvaluator.evaluateFrom(FromEvaluatorFactory.java:219)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CopyUnitImpl.doCopy(CopyUnitImpl.java:78)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.AssignUnitImpl.executeCopies(AssignUnitImpl.java:382)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.AssignUnitImpl.doAction(AssignUnitImpl.java:172)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CodeReUseHelper.executeChildActivities(CodeReUseHelper.java:66)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.executeChildActivities(StructuredActivityUnitImpl.java:191)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doAction(StructuredActivityUnitImpl.java:92)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.SequenceUnitImpl.doAction(SequenceUnitImpl.java:94)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CodeReUseHelper.executeChildActivities(CodeReUseHelper.java:66)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.executeChildActivities(StructuredActivityUnitImpl.java:191)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doAction(StructuredActivityUnitImpl.java:92)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.IfUnitImpl.doAction(IfUnitImpl.java:151)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.CodeReUseHelper.executeChildActivities(CodeReUseHelper.java:66)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.executeChildActivities(StructuredActivityUnitImpl.java:191)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doResumeAction(StructuredActivityUnitImpl.java:146)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.ActivityUnitImpl.doPassControlToParent(ActivityUnitImpl.java:253)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.RepeatUntilUnitImpl.doResumeAction(RepeatUntilUnitImpl.java:149)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.ActivityUnitImpl.doPassControlToParent(ActivityUnitImpl.java:253)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.StructuredActivityUnitImpl.doResumeAction(StructuredActivityUnitImpl.java:159)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.ActivityUnitImpl.doPassControlToParent(ActivityUnitImpl.java:253)
+	at com.sun.jbi.engine.bpel.core.bpel.model.runtime.impl.FlowUnitImpl.doAction(FlowUnitImpl.java:108)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.impl.BPELInterpreter.execute(BPELInterpreter.java:163)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.BusinessProcessInstanceThread.execute(BusinessProcessInstanceThread.java:98)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.impl.BPELProcessManagerImpl.process(BPELProcessManagerImpl.java:1133)
+	at com.sun.jbi.engine.bpel.core.bpel.engine.impl.EngineImpl.process(EngineImpl.java:280)
+	at com.sun.jbi.engine.bpel.BPELSEInOutThread.run(BPELSEInOutThread.java:186)
+&amp;lt;/stackTrace&amp;gt;&amp;lt;/pojoException&amp;gt;&amp;lt;/jbi:part&amp;gt;&amp;lt;/jbi:message&amp;gt;. Sending errors for the pending requests in the process scope before terminating the process instance
+   Caused by: BPCOR-6194: encountered exception: java.lang.Exception while invoking: public org.w3c.dom.Node org.moses.proxy.Proxy.invoke(org.w3c.dom.Node) throws java.io.FileNotFoundException,java.io.IOException,java.lang.ClassNotFoundException,java.lang.InstantiationException,java.lang.IllegalAccessException,org.moses.exception.BadArgumentsMDALException,org.moses.exception.NoSuchSolutionMDALException,org.moses.exception.MDALException,javax.xml.soap.SOAPException,java.lang.InterruptedException,java.lang.Exception on class: org.moses.proxy.Proxy
+   Caused by: No usable services for this solution</detailText>
+      </detail>
+    </SOAP-ENV:Fault>
+  </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>

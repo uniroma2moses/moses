@@ -1,0 +1,16 @@
+<soapenv:Envelope xsi:schemaLocation="http://schemas.xmlsoap.org/soap/envelope/ http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:esec="ESECCompositeApplication" xmlns:esec1="http://xml.netbeans.org/schema/ESECProcess" xmlns:mos="http://xml.netbeans.org/schema/MOSESSchema">
+  <soapenv:Body>
+    <esec:ESECProcessOperation soapenv:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+      <ESECPart>
+        <esec1:ioElement xsi:type="xsd:string">ESECProcess</esec1:ioElement>
+      </ESECPart>
+      <MOSESPart>
+        <mos:processMetaData>
+          <processClass xsi:type="xsd:string">1</processClass>
+          <username xsi:type="xsd:string">11</username>
+          <password xsi:type="xsd:string">22</password>
+        </mos:processMetaData>
+      </MOSESPart>
+    </esec:ESECProcessOperation>
+  </soapenv:Body>
+</soapenv:Envelope>

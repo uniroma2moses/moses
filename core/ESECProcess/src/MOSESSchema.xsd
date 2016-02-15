@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    targetNamespace="http://xml.netbeans.org/schema/MOSESSchema"
+    xmlns:tns="http://xml.netbeans.org/schema/MOSESSchema"
+    elementFormDefault="qualified">
+    <xsd:element name="processMetaData">
+        <xsd:complexType>
+            <xsd:sequence>
+                <xsd:element name="processClass" type="xsd:string"></xsd:element>
+                <xsd:element name="username" type="xsd:string"></xsd:element>
+                <xsd:element name="password" type="xsd:string"></xsd:element>
+            </xsd:sequence>
+        </xsd:complexType>
+    </xsd:element>
+</xsd:schema>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://partner:8084/axis2/services/S1?wsdl" uri="partner_8084/axis2/services/S1.wsdl"/>
+    <system systemId="http://partner:8084/axis2/services/S4?wsdl" uri="partner_8084/axis2/services/S4.wsdl"/>
+    <system systemId="http://partner:8084/axis2/services/S3?wsdl" uri="partner_8084/axis2/services/S3.wsdl"/>
+    <system systemId="http://partner:8084/axis2/services/S6?wsdl" uri="partner_8084/axis2/services/S6.wsdl"/>
+    <system systemId="http://partner:8084/axis2/services/S5?wsdl" uri="partner_8084/axis2/services/S5.wsdl"/>
+    <system systemId="http://partner:8084/axis2/services/S2?wsdl" uri="partner_8084/axis2/services/S2.wsdl"/>
+</catalog>
+
+
+
+

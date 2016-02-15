@@ -1,0 +1,164 @@
+
+<invokeRequest xmlns="http://moses.org/wsdl/Proxy">
+    <qos xmlns="">good</qos>
+    <processName xmlns="">TripPlanner</processName>
+    <payload xmlns:msgns="http://HotelSelection.services.org" xmlns:ns0="http://moses.org/wsdl/Proxy" xmlns="">
+        <tc xmlns="http://HotelSelection.services.org">
+            <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+            <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+        </tc>
+    </payload>
+    <serviceName xmlns="">HotelSelection</serviceName>
+    <operationName xmlns="">hotelSelection</operationName>
+    <clientIdentifier xmlns="">aaa</clientIdentifier>
+</invokeRequest>
+
+
+<invokeRequest xmlns="http://xml.netbeans.org/schema/ProxySchema">
+    <qos>good</qos>
+    <processName>TripPlanner</processName>
+    <payload xmlns:msgns="http://HotelSelection.services.org">
+        <tc xmlns="http://HotelSelection.services.org">
+            <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+            <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+        </tc>
+    </payload>
+    <serviceName>HotelSelection</serviceName>
+    <operationName>hotelSelection</operationName>
+    <clientIdentifier>aaa</clientIdentifier>
+</invokeRequest>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<invokeRequest xmlns="http://xml.netbeans.org/schema/ProxySchema">
+    <qos>good</qos>
+    <processName>TripPlanner</processName>
+    <payload xmlns:msgns="http://HotelSelection.services.org">
+        <tc xmlns="http://HotelSelection.services.org">
+            <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+            <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+        </tc>
+    </payload>
+    <serviceName>HotelSelection</serviceName>
+    <operationName>hotelSelection</operationName>
+    <clientIdentifier>aaa</clientIdentifier>
+</invokeRequest>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<payload xmlns:msgns="http://HotelSelection.services.org">
+    <tc xmlns="http://HotelSelection.services.org">
+        <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+        <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+    </tc>
+</payload>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<tc xmlns="http://HotelSelection.services.org">
+    <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+    <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+</tc>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<payload xmlns:msgns="http://HotelSelection.services.org">
+    <tc xmlns="http://HotelSelection.services.org">
+        <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+        <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+    </tc>
+</payload>
+
+<?xml version="1.0" encoding="UTF-8"?>
+<msgns:payload xmlns:msgns="http://HotelSelection.services.org">
+    <tc xmlns="http://HotelSelection.services.org">
+        <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+        <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+    </tc>
+</msgns:payload>
+
+
+<ns:hotelSelectionResponse xmlns:ns="http://HotelSelection.services.org" xmlns:ax29="http://entity.HotelSelection.services.org/xsd">
+    <ns:return>Miramare</ns:return>
+    <ns:return>Eden</ns:return>
+    <ns:return>Castello</ns:return>
+    <ns:return>Roma</ns:return>
+    <ns:return>Pineta</ns:return>
+    <ns:return>Hilton</ns:return>
+</ns:hotelSelectionResponse>
+
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <payload xmlns="http://xml.netbeans.org/schema/ProxySchema" xmlns:msgns="http://HotelSelection.services.org">
+            <tc xmlns="http://HotelSelection.services.org">
+                <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+                <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+            </tc>
+        </payload>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+<invokeRequest xmlns="http://xml.netbeans.org/schema/ProxySchema">
+    <qos>good</qos>
+    <processName>TripPlanner</processName>
+    <payload xmlns:msgns="http://HotelSelection.services.org">
+        <tc xmlns="http://HotelSelection.services.org">
+            <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+            <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+        </tc>
+    </payload>
+    <serviceName>HotelSelection</serviceName>
+    <operationName>hotelSelection</operationName>
+    <clientIdentifier>aaa</clientIdentifier>
+</invokeRequest>
+
+<ns:hotelSelectionResponse xmlns:ns="http://HotelSelection.services.org" xmlns:ax29="http://entity.HotelSelection.services.org/xsd">
+    <ns:return>Miramare</ns:return>
+    <ns:return>Eden</ns:return>
+    <ns:return>Castello</ns:return>
+    <ns:return>Roma</ns:return>
+    <ns:return>Pineta</ns:return>
+    <ns:return>Hilton</ns:return>
+</ns:hotelSelectionResponse>
+
+<proxyns:invokeResponse xmlns:proxyns="http://xml.netbeans.org/schema/ProxySchema">
+    <ns:hotelSelectionResponse xmlns:ax29="http://entity.HotelSelection.services.org/xsd" xmlns:ns="http://HotelSelection.services.org">
+        <ns:return>Miramare</ns:return>
+        <ns:return>Eden</ns:return>
+        <ns:return>Castello</ns:return>
+        <ns:return>Roma</ns:return>
+        <ns:return>Pineta</ns:return>
+        <ns:return>Hilton</ns:return>
+    </ns:hotelSelectionResponse>
+    <clientIdentifier xmlns="http://xml.netbeans.org/schema/ProxySchema">aaa</clientIdentifier>
+</proxyns:invokeResponse>
+
+<proxyns:invokeResponse xmlns:proxyns="http://xml.netbeans.org/schema/ProxySchema">
+    <result>
+        <ns:return xmlns:ns="http://HotelSelection.services.org">Miramare</ns:return>
+        <ns:return xmlns:ns="http://HotelSelection.services.org">Eden</ns:return>
+        <ns:return xmlns:ns="http://HotelSelection.services.org">Castello</ns:return>
+        <ns:return xmlns:ns="http://HotelSelection.services.org">Roma</ns:return>
+        <ns:return xmlns:ns="http://HotelSelection.services.org">Pineta</ns:return>
+        <ns:return xmlns:ns="http://HotelSelection.services.org">Hilton</ns:return>
+    </result>
+    <clientIdentifier xmlns="http://xml.netbeans.org/schema/ProxySchema">aaa</clientIdentifier>
+</proxyns:invokeResponse>
+
+<SOAP-ENV:Envelope xmlns:SOAP-ENV="http://schemas.xmlsoap.org/soap/envelope/">
+    <SOAP-ENV:Header/>
+    <SOAP-ENV:Body>
+        <processns:payload xmlns:processns="http://CheckCreditCard.services.org">
+            <c xmlns="http://CheckCreditCard.services.org">
+                <ns7:creditCardName xmlns:ns7="http://entity.CheckCreditCard.services.org/xsd">Stefano</ns7:creditCardName>
+                <ns7:creditCardNumber xmlns:ns7="http://entity.CheckCreditCard.services.org/xsd">1234</ns7:creditCardNumber>
+            </c>
+        </processns:payload>
+    </SOAP-ENV:Body>
+</SOAP-ENV:Envelope>
+
+<payload xmlns:msgns="http://HotelSelection.services.org">
+    <tc xmlns="http://HotelSelection.services.org">
+        <ns9:city xmlns:ns9="http://entity.HotelSelection.services.org/xsd">Roma</ns9:city>
+        <ns9:maxCost xmlns:ns9="http://entity.HotelSelection.services.org/xsd">100</ns9:maxCost>
+    </tc>
+</payload>

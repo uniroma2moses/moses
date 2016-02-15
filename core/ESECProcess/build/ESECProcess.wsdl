@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="ESECProcess" targetNamespace="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess"
+    xmlns="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" xmlns:ns="http://xml.netbeans.org/schema/ESECProcess" xmlns:ns0="http://xml.netbeans.org/schema/MOSESSchema" xmlns:plnk="http://docs.oasis-open.org/wsbpel/2.0/plnktype">
+    <types>
+        <xsd:schema targetNamespace="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess">
+            <xsd:import namespace="http://xml.netbeans.org/schema/MOSESSchema" schemaLocation="MOSESSchema.xsd"/>
+            <xsd:import namespace="http://xml.netbeans.org/schema/ESECProcess" schemaLocation="ESECProcess.xsd"/>
+        </xsd:schema>
+    </types>
+    <message name="ESECProcessOperationRequest">
+        <part name="ESECPart" element="ns:ioElement"/>
+        <part name="MOSESPart" element="ns0:processMetaData"/>
+    </message>
+    <message name="ESECProcessOperationResponse">
+        <part name="part1" element="ns:ioElement"/>
+    </message>
+    <portType name="ESECProcessPortType">
+        <operation name="ESECProcessOperation">
+            <input name="input1" message="tns:ESECProcessOperationRequest"/>
+            <output name="output1" message="tns:ESECProcessOperationResponse"/>
+        </operation>
+    </portType>
+    <plnk:partnerLinkType name="ESECProcess">
+        <!-- A partner link type is automatically generated when a new port type is added. Partner link types are used by BPEL processes. 
+In a BPEL process, a partner link represents the interaction between the BPEL process and a partner service. Each partner link is associated with a partner link type.
+A partner link type characterizes the conversational relationship between two services. The partner link type can have one or two roles.-->
+        <plnk:role name="ESECProcessPortTypeRole" portType="tns:ESECProcessPortType"/>
+    </plnk:partnerLinkType>
+</definitions>
+

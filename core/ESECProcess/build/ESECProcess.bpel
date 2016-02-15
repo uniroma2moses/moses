@@ -1,0 +1,490 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<process
+    name="ESECProcess"
+    targetNamespace="http://enterprise.netbeans.org/bpel/ESECProcess/ESECProcess"
+    xmlns:tns="http://enterprise.netbeans.org/bpel/ESECProcess/ESECProcess"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:sxt="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Trace" 
+    xmlns:sxed="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor"
+    xmlns:sxeh="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/ErrorHandling" xmlns:sxed2="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/Editor2" xmlns:ns1="http://xml.netbeans.org/schema/ProxySchema" xmlns:ns2="http://xml.netbeans.org/schema/MOSESSchema" xmlns:ns="http://ce.uniroma2.it" xmlns:hins="java://org.moses.proxy.Proxy" xmlns:ns3="http://j2ee.netbeans.org/xsd/tableSchema">
+    <import namespace="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" location="ESECProcess.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://xml.netbeans.org/schema/ProxySchema" location="ProxySchema.xsd" importType="http://www.w3.org/2001/XMLSchema"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/S1Wrapper" location="S1Wrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ce.uniroma2.it" location="http://partner:8084/axis2/services/S1?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/S2Wrapper" location="S2Wrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ce.uniroma2.it" location="http://partner:8084/axis2/services/S2?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/S3Wrapper" location="S3Wrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ce.uniroma2.it" location="http://partner:8084/axis2/services/S3?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/S4Wrapper" location="S4Wrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ce.uniroma2.it" location="http://partner:8084/axis2/services/S4?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/S5Wrapper" location="S5Wrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ce.uniroma2.it" location="http://partner:8084/axis2/services/S5?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/S6Wrapper" location="S6Wrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://ce.uniroma2.it" location="http://partner:8084/axis2/services/S6?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://enterprise.netbeans.org/bpel/OptimizationEngineWrapper" location="OptimizationEngineWrapper.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://optimization_engine.moses.org/" location="http://sla-matlab:8080/OptimizationEngineService/OptimizationEngine?wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <import namespace="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" location="JDBCComponent.wsdl" importType="http://schemas.xmlsoap.org/wsdl/"/>
+    <partnerLinks>
+        <partnerLink name="OptimizationPL" xmlns:tns="http://enterprise.netbeans.org/bpel/OptimizationEngineWrapper" partnerLinkType="tns:OptimizationEngineLinkType" partnerRole="OptimizationEngineRole"/>
+        <partnerLink name="PartnerLink1" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" partnerLinkType="tns:jdbcpartner" partnerRole="jdbcPortTypeRole"/>
+        <partnerLink name="ESECProcessPL" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" partnerLinkType="tns:ESECProcess" myRole="ESECProcessPortTypeRole"/>
+    </partnerLinks>
+    <variables>
+        <variable name="InsertOut1" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" messageType="tns:RetMsg"/>
+        <variable name="InsertIn1" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" messageType="tns:inputMsg"/>
+        <variable name="InsertOut" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" messageType="tns:RetMsg"/>
+        <variable name="InsertIn" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" messageType="tns:inputMsg"/>
+        <variable name="CalculateProcessSolutionForProcessRequestOut" xmlns:tns="http://optimization_engine.moses.org/" messageType="tns:calculateProcessSolutionForProcessRequestResponse"/>
+        <variable name="CalculateProcessSolutionForProcessRequestIn" xmlns:tns="http://optimization_engine.moses.org/" messageType="tns:calculateProcessSolutionForProcessRequest"/>
+        <variable name="ifThreshold" type="xs:float"/>
+        <variable name="prob" type="xs:double"/>
+        <variable name="cost2" type="xs:string"/>
+        <variable name="cost" type="xs:string"/>
+        <variable name="s6Out" messageType="ns:s6opResponse"/>
+        <variable name="s6In" messageType="ns:s6opRequest"/>
+        <variable name="s5Out" messageType="ns:s5opResponse"/>
+        <variable name="s5In" messageType="ns:s5opRequest"/>
+        <variable name="s4Out" messageType="ns:s4opResponse"/>
+        <variable name="s4In" messageType="ns:s4opRequest"/>
+        <variable name="s3Out" messageType="ns:s3opResponse"/>
+        <variable name="s3In" messageType="ns:s3opRequest"/>
+        <variable name="s2Out" messageType="ns:s2opResponse"/>
+        <variable name="s2In" messageType="ns:s2opRequest"/>
+        <variable name="ProxyOut2" element="ns1:invokeResponse"/>
+        <variable name="ProxyIn2" element="ns1:invokeRequest"/>
+        <variable name="s1Out" messageType="ns:s1opResponse"/>
+        <variable name="s1In" messageType="ns:s1opRequest"/>
+        <variable name="ProxyOut" element="ns1:invokeResponse"/>
+        <variable name="ProxyIn" element="ns1:invokeRequest"/>
+        <variable name="ESECProcessOperationOut" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" messageType="tns:ESECProcessOperationResponse"/>
+        <variable name="ESECProcessOperationIn" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" messageType="tns:ESECProcessOperationRequest"/>
+    </variables>
+  <!--<faultHandlers>
+        <catchAll>
+            <throw name="Throw1" faultName="sxeh:systemFault"/>
+        </catchAll>
+    </faultHandlers>-->
+    <sequence>
+        <receive name="Receive" createInstance="yes" partnerLink="ESECProcessPL" operation="ESECProcessOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" portType="tns:ESECProcessPortType" variable="ESECProcessOperationIn"/>
+
+        <assign name="perrequestAssign">
+            <copy>
+  <!--              <from variable="ESECProcessOperationIn" part="ESECPart"/>-->
+                <from>'ESECProcess'</from>
+                <to>$CalculateProcessSolutionForProcessRequestIn.parameters/processName</to>
+            </copy>
+            <copy>
+                <from>$ESECProcessOperationIn.MOSESPart/processClass</from>
+                <to>$CalculateProcessSolutionForProcessRequestIn.parameters/processClass</to>
+            </copy>
+        </assign>
+
+        <invoke name="OptimizationInvoke" partnerLink="OptimizationPL" operation="calculateProcessSolutionForProcessRequest" xmlns:tns="http://optimization_engine.moses.org/" portType="tns:OptimizationEngine" inputVariable="CalculateProcessSolutionForProcessRequestIn" outputVariable="CalculateProcessSolutionForProcessRequestOut"/>
+        <assign name="UpdateProcessInvocationAssign">
+            <copy>
+                <from>'ESECProcess'</from>
+                <to>$InsertIn1.part/ns3:NumRequest_Record/ns3:ProcessName</to>
+            </copy>
+            <copy>
+                <from>0</from>
+                <to>$InsertIn1.part/ns3:NumRequest_Record/ns3:RequestID</to>
+            </copy>
+        </assign>
+        <invoke name="UpdateProcessInvocation" partnerLink="PartnerLink1" operation="insert" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/JDBCComponent" portType="tns:jdbcPortType" inputVariable="InsertIn1" outputVariable="InsertOut1"/>
+      
+        <assign name="PartnerSet">
+            <copy>
+                <from variable="ESECProcessOperationIn" part="ESECPart"/>
+                <to>$s1In.parameters/ns:parameter</to>
+            </copy>
+            <copy>
+                <from variable="ESECProcessOperationIn" part="ESECPart"/>
+                <to>$s2In.parameters/ns:parameter</to>
+            </copy>
+            <copy>
+                <from variable="ESECProcessOperationIn" part="ESECPart"/>
+                <to>$s3In.parameters/ns:parameter</to>
+            </copy>
+            <copy>
+                <from variable="ESECProcessOperationIn" part="ESECPart"/>
+                <to>$s4In.parameters/ns:parameter</to>
+            </copy>
+            <copy>
+                <from variable="ESECProcessOperationIn" part="ESECPart"/>
+                <to>$s5In.parameters/ns:parameter</to>
+            </copy>
+            <copy>
+                <from variable="ESECProcessOperationIn" part="ESECPart"/>
+                <to>$s6In.parameters/ns:parameter</to>
+            </copy>
+        </assign>
+        <assign name="ProxySet">
+            <copy>
+                <from>'ESECProcess'</from>
+                <to>$ProxyIn/ns1:processName</to>
+            </copy>
+            <copy>
+                <from>'ESECProcess'</from>
+                <to>$ProxyIn2/ns1:processName</to>
+            </copy>
+            <copy>
+                <from>'0'</from>
+                <to>$ProxyIn2/ns1:cost</to>
+            </copy>
+            <copy>
+                <from>'0'</from>
+                <to>$ProxyIn/ns1:cost</to>
+            </copy>
+            <copy>
+                <from>'-1'</from>
+                <to>$ProxyIn/ns1:clientIdentifier</to>
+            </copy>
+            <copy>
+                <from>'-1'</from>
+                <to>$ProxyIn2/ns1:clientIdentifier</to>
+            </copy>
+        </assign>
+        <assign name="ClassSet">
+            <copy>
+                <from>$ESECProcessOperationIn.MOSESPart/processClass</from>
+                <to>$ProxyIn/ns1:qos</to>
+            </copy>
+            <copy>
+                <from>$ESECProcessOperationIn.MOSESPart/processClass</from>
+                <to>$ProxyIn2/ns1:qos</to>
+            </copy>
+        </assign>
+        <assign name="Assign1">
+            <copy>
+                <from>1</from>
+                <to variable="prob"/>
+            </copy>
+            <copy>
+                <from>'0'</from>
+                <to variable="cost2"/>
+            </copy>
+            <copy>
+                <from>'0'</from>
+                <to variable="cost"/>
+            </copy>
+        </assign>
+        <repeatUntil name="RepeatUntil1">
+            <sequence name="Sequence3">
+                <flow name="Flow1">
+                    <sequence name="FlowSequence">
+                        <assign name="Invoke1Set">
+                            <copy>
+                                <from variable="s1In" part="parameters"/>
+                                <to>$ProxyIn/ns1:payload</to>
+                            </copy>
+                            <copy>
+                                <from>'S1'</from>
+                                <to>$ProxyIn/ns1:serviceName</to>
+                            </copy>
+                            <copy>
+                                <from>'s1op'</from>
+                                <to>$ProxyIn/ns1:operationName</to>
+                            </copy>
+                            <copy>
+                                <from variable="cost"/>
+                                <to>$ProxyIn/ns1:cost</to>
+                            </copy>
+                        </assign>
+                        <assign name="Invoke1">
+                            <copy>
+                                <from>hins:invoke($ProxyIn)</from>
+                                <to>$ProxyOut</to>
+                            </copy>
+                        </assign>
+                        <assign name="Invoke1Cast">
+                            <copy>
+                                <from>$ProxyOut/ns1:result</from>
+                                <to variable="s1Out" part="parameters"/>
+                            </copy>
+                            <copy>
+                                <from>$ProxyOut/ns1:cost</from>
+                                <to variable="cost"/>
+                            </copy>
+                        </assign>
+                        <assign name="Invoke2Set">
+                            <copy>
+                                <from variable="s2In" part="parameters"/>
+                                <to>$ProxyIn/ns1:payload</to>
+                            </copy>
+                            <copy>
+                                <from>'S2'</from>
+                                <to>$ProxyIn/ns1:serviceName</to>
+                            </copy>
+                            <copy>
+                                <from>'s2op'</from>
+                                <to>$ProxyIn/ns1:operationName</to>
+                            </copy>
+                            <copy>
+                                <from variable="cost"/>
+                                <to>$ProxyIn/ns1:cost</to>
+                            </copy>
+                        </assign>
+                        <assign name="Invoke2">
+                            <copy>
+                                <from>hins:invoke($ProxyIn)</from>
+                                <to>$ProxyOut</to>
+                            </copy>
+                        </assign>
+                        <assign name="Invoke2Cast">
+                            <copy>
+                                <from>$ProxyOut/ns1:result</from>
+                                <to variable="s2Out" part="parameters"/>
+                            </copy>
+                            <copy>
+                                <from>$ProxyOut/ns1:cost</from>
+                                <to variable="cost"/>
+                            </copy>
+                        </assign>
+                    </sequence>
+                    <sequence name="FlowSequence1">
+                        <assign name="Invoke3Set">
+                            <copy>
+                                <from variable="s2In" part="parameters"/>
+                                <to>$ProxyIn2/ns1:payload</to>
+                            </copy>
+                            <copy>
+                                <from>'S3'</from>
+                                <to>$ProxyIn2/ns1:serviceName</to>
+                            </copy>
+                            <copy>
+                                <from>'s3op'</from>
+                                <to>$ProxyIn2/ns1:operationName</to>
+                            </copy>
+                            <copy>
+                                <from variable="cost2"/>
+                                <to>$ProxyIn2/ns1:cost</to>
+                            </copy>
+                        </assign>
+                        <assign name="Invoke3">
+                            <copy>
+                                <from>hins:invoke($ProxyIn2)</from>
+                                <to>$ProxyOut2</to>
+                            </copy>
+                        </assign>
+                        <assign name="Invoke3Cast">
+                            <copy>
+                                <from>$ProxyOut2/ns1:result</from>
+                                <to variable="s3Out" part="parameters"/>
+                            </copy>
+                            <copy>
+                                <from>$ProxyOut2/ns1:cost</from>
+                                <to variable="cost2"/>
+                            </copy>
+                        </assign>
+                    </sequence>
+                </flow>
+                <assign name="JavaScript1">
+                    <extensionAssignOperation>
+                        <Expression xmlns="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/DataHandling" expressionLanguage="urn:sun:bpel:JavaScript" inputVars=""  outputVars="prob=prob"><![CDATA[]]>
+                        default xml namespace = "http://enterprise.netbeans.org/bpel/ESECProcess/ESECProcess"
+                        var prob = Math.random();
+                        </Expression>
+                    </extensionAssignOperation>
+                </assign>
+            </sequence>
+            <condition>$prob &gt;= 1 div 3</condition>
+        </repeatUntil>
+        <assign name="Invoke4Set">
+            <copy>
+                <from variable="s4In" part="parameters"/>
+                <to>$ProxyIn/ns1:payload</to>
+            </copy>
+            <copy>
+                <from>'S4'</from>
+                <to>$ProxyIn/ns1:serviceName</to>
+            </copy>
+            <copy>
+                <from>'s4op'</from>
+                <to>$ProxyIn/ns1:operationName</to>
+            </copy>
+            <copy>
+                <from variable="cost"/>
+                <to>$ProxyIn/ns1:cost</to>
+            </copy>
+        </assign>
+        <assign name="Invoke4">
+            <copy>
+                <from>hins:invoke($ProxyIn)</from>
+                <to>$ProxyOut</to>
+            </copy>
+        </assign>
+        <assign name="Invoke4Cast">
+            <copy>
+                <from>$ProxyOut/ns1:result</from>
+                <to variable="s4Out" part="parameters"/>
+            </copy>
+            <copy>
+                <from>$ProxyOut/ns1:cost</from>
+                <to variable="cost"/>
+            </copy>
+        </assign>
+        <if name="If2">
+            <condition>$ESECProcessOperationIn.MOSESPart/ns2:processClass = '2'</condition>
+            <assign name="Assign2">
+                <copy>
+                    <from>0.5</from>
+                    <to variable="ifThreshold"/>
+                </copy>
+            </assign>
+            <else>
+                <assign name="Assign3">
+                    <copy>
+                        <from>0.7</from>
+                        <to variable="ifThreshold"/>
+                    </copy>
+                </assign>
+            </else>
+        </if>
+        <assign name="JavaScript2">
+            <extensionAssignOperation>
+                <Expression xmlns="http://www.sun.com/wsbpel/2.0/process/executable/SUNExtension/DataHandling" expressionLanguage="urn:sun:bpel:JavaScript" inputVars="" outputVars="prob=prob"><![CDATA[]]>
+                        default xml namespace = "http://enterprise.netbeans.org/bpel/ESECProcess/ESECProcess"
+                        var prob = Math.random();
+                </Expression>
+            </extensionAssignOperation>
+        </assign>
+        <if name="If1">
+            <condition>$prob &lt;= $ifThreshold</condition>
+            <sequence name="Sequence1">
+                <assign name="Invoke5Set">
+                    <copy>
+                        <from variable="s5In" part="parameters"/>
+                        <to>$ProxyIn/ns1:payload</to>
+                    </copy>
+                    <copy>
+                        <from>'S5'</from>
+                        <to>$ProxyIn/ns1:serviceName</to>
+                    </copy>
+                    <copy>
+                        <from>'s5op'</from>
+                        <to>$ProxyIn/ns1:operationName</to>
+                    </copy>
+                    <copy>
+                        <from variable="cost"/>
+                        <to>$ProxyIn/ns1:cost</to>
+                    </copy>
+                </assign>
+                <assign name="Invoke5">
+                    <copy>
+                        <from>hins:invoke($ProxyIn)</from>
+                        <to>$ProxyOut</to>
+                    </copy>
+                </assign>
+                <assign name="Invoke5Cast">
+                    <copy>
+                        <from>$ProxyOut/ns1:result</from>
+                        <to variable="s5Out" part="parameters"/>
+                    </copy>
+                    <copy>
+                        <from>$ProxyOut/ns1:cost</from>
+                        <to variable="cost"/>
+                    </copy>
+                </assign>
+            </sequence>
+            <else>
+                <sequence name="Sequence2">
+                    <assign name="Invoke6Set">
+                        <copy>
+                            <from variable="s6In" part="parameters"/>
+                            <to>$ProxyIn/ns1:payload</to>
+                        </copy>
+                        <copy>
+                            <from>'S6'</from>
+                            <to>$ProxyIn/ns1:serviceName</to>
+                        </copy>
+                        <copy>
+                            <from>'s6op'</from>
+                            <to>$ProxyIn/ns1:operationName</to>
+                        </copy>
+                        <copy>
+                            <from variable="cost"/>
+                            <to>$ProxyIn/ns1:cost</to>
+                        </copy>
+                    </assign>
+                    <assign name="Invoke6">
+                        <copy>
+                            <from>hins:invoke($ProxyIn)</from>
+                            <to>$ProxyOut</to>
+                        </copy>
+                    </assign>
+                    <assign name="Invoke6Cast">
+                        <copy>
+                            <from>$ProxyOut/ns1:result</from>
+                            <to variable="s6Out" part="parameters"/>
+                        </copy>
+                        <copy>
+                            <from>$ProxyOut/ns1:cost</from>
+                            <to variable="cost"/>
+                        </copy>
+                    </assign>
+                </sequence>
+            </else>
+        </if>
+        <assign name="ReplySet">
+            <copy>
+                <from>string(number($cost) + number($cost2))</from>
+                <to variable="ESECProcessOperationOut" part="part1"/>
+            </copy>
+        </assign>
+        <reply name="Reply" partnerLink="ESECProcessPL" operation="ESECProcessOperation" xmlns:tns="http://j2ee.netbeans.org/wsdl/ESECProcess/ESECProcess" portType="tns:ESECProcessPortType" variable="ESECProcessOperationOut"/>
+    </sequence>
+</process>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

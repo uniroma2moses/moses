@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<catalog xmlns="urn:oasis:names:tc:entity:xmlns:xml:catalog" prefer="system">
+    <system systemId="http://localhost:8084/axis2/services/S1?wsdl" uri="src/localhost_8084/axis2/services/S1.wsdl"/>
+    <system systemId="http://localhost:8084/axis2/services/S2?wsdl" uri="src/localhost_8084/axis2/services/S2.wsdl"/>
+    <system systemId="http://localhost:8084/axis2/services/S3?wsdl" uri="src/localhost_8084/axis2/services/S3.wsdl"/>
+    <system systemId="http://localhost:8084/axis2/services/S4?wsdl" uri="src/localhost_8084/axis2/services/S4.wsdl"/>
+    <system systemId="http://localhost:8084/axis2/services/S5?wsdl" uri="src/localhost_8084/axis2/services/S5.wsdl"/>
+    <system systemId="http://localhost:8084/axis2/services/S6?wsdl" uri="src/localhost_8084/axis2/services/S6.wsdl"/>
+    <nextCatalog catalog="nbproject/private/cache/retriever/catalog.xml"/>
+    <system systemId="http://sla-matlab:8080/OptimizationEngineService/OptimizationEngine?wsdl" uri="src/sla-matlab_8080/OptimizationEngineService/OptimizationEngine.wsdl"/>
+    <system systemId="http://sla-matlab:8080/OptimizationEngineService/OptimizationEngine?xsd=1" uri="src/sla-matlab_8080/OptimizationEngineService/OptimizationEngine.xsd_1.xsd"/>
+</catalog>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

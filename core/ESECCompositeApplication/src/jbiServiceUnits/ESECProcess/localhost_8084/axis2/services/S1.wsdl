@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:ns1="http://org.apache.axis2/xsd" xmlns:ns="http://ce.uniroma2.it" xmlns:wsaw="http://www.w3.org/2006/05/addressing/wsdl" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://ce.uniroma2.it">
+    <wsdl:documentation>S1</wsdl:documentation>
+    <wsdl:types>
+        <xs:schema attributeFormDefault="qualified" elementFormDefault="qualified" targetNamespace="http://ce.uniroma2.it">
+            <xs:element name="s1op">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="parameter" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+            <xs:element name="s1opResponse">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element minOccurs="0" name="return" nillable="true" type="xs:string"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:schema>
+    </wsdl:types>
+    <wsdl:message name="s1opRequest">
+        <wsdl:part name="parameters" element="ns:s1op"/>
+    </wsdl:message>
+    <wsdl:message name="s1opResponse">
+        <wsdl:part name="parameters" element="ns:s1opResponse"/>
+    </wsdl:message>
+    <wsdl:portType name="S1PortType">
+        <wsdl:operation name="s1op">
+            <wsdl:input message="ns:s1opRequest" wsaw:Action="urn:s1op"/>
+            <wsdl:output message="ns:s1opResponse" wsaw:Action="urn:s1opResponse"/>
+        </wsdl:operation>
+    </wsdl:portType>
+    <wsdl:binding name="S1Soap11Binding" type="ns:S1PortType">
+        <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="s1op">
+            <soap:operation soapAction="urn:s1op" style="document"/>
+            <wsdl:input>
+                <soap:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="S1Soap12Binding" type="ns:S1PortType">
+        <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" style="document"/>
+        <wsdl:operation name="s1op">
+            <soap12:operation soapAction="urn:s1op" style="document"/>
+            <wsdl:input>
+                <soap12:body use="literal"/>
+            </wsdl:input>
+            <wsdl:output>
+                <soap12:body use="literal"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:binding name="S1HttpBinding" type="ns:S1PortType">
+        <http:binding verb="POST"/>
+        <wsdl:operation name="s1op">
+            <http:operation location="S1/s1op"/>
+            <wsdl:input>
+                <mime:content type="text/xml" part="s1op"/>
+            </wsdl:input>
+            <wsdl:output>
+                <mime:content type="text/xml" part="s1op"/>
+            </wsdl:output>
+        </wsdl:operation>
+    </wsdl:binding>
+    <wsdl:service name="S1">
+        <wsdl:port name="S1HttpSoap11Endpoint" binding="ns:S1Soap11Binding">
+            <soap:address location="http://160.80.87.57:8084/axis2/services/S1.S1HttpSoap11Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="S1HttpSoap12Endpoint" binding="ns:S1Soap12Binding">
+            <soap12:address location="http://160.80.87.57:8084/axis2/services/S1.S1HttpSoap12Endpoint/"/>
+        </wsdl:port>
+        <wsdl:port name="S1HttpEndpoint" binding="ns:S1HttpBinding">
+            <http:address location="http://160.80.87.57:8084/axis2/services/S1.S1HttpEndpoint/"/>
+        </wsdl:port>
+    </wsdl:service>
+</wsdl:definitions>
